@@ -79,6 +79,7 @@ def main() -> int:
         token="fake",
         admin_ids=frozenset({1}),
         channel_url="https://t.me/+XufFz8GGR0o3Njky",
+        webapp_url="https://shop.example.com",
         manager_chat_id=1,
         brand_name="ВОРОЖБИТОВ | ОДЕЖДА",
         support_username="",

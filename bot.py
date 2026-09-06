@@ -14,6 +14,7 @@ import html
 import io
 import json
 import logging
+import mimetypes
 import os
 import random
 import re
@@ -128,6 +129,7 @@ class Settings:
     token: str
     admin_ids: frozenset[int]
     channel_url: str
+    webapp_url: str
     manager_chat_id: int | None
     brand_name: str
     support_username: str
@@ -151,6 +153,7 @@ class Settings:
             token=token,
             admin_ids=admin_ids,
             channel_url=os.getenv("CHANNEL_URL", "https://t.me/").strip(),
+            webapp_url=os.getenv("WEBAPP_URL", "").strip(),
             manager_chat_id=int(manager_raw) if manager_raw.lstrip("-").isdigit() else None,
             brand_name=os.getenv("BRAND_NAME", "ВОРОЖБИТОВ | ОДЕЖДА").strip() or "ВОРОЖБИТОВ | ОДЕЖДА",
             support_username=os.getenv("SUPPORT_USERNAME", "").strip().lstrip("@"),
@@ -316,6 +319,7 @@ class Database:
                 product_name TEXT NOT NULL,
                 size TEXT NOT NULL,
                 phone TEXT NOT NULL,
+                quantity INTEGER NOT NULL DEFAULT 1,
                 status TEXT NOT NULL DEFAULT 'new',
                 created_at TEXT NOT NULL,
                 FOREIGN KEY(user_id) REFERENCES users(user_id)
@@ -345,6 +349,8 @@ class Database:
         if "request_id" not in order_columns:
             conn.execute("ALTER TABLE orders ADD COLUMN request_id TEXT")
             conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_orders_request_id ON orders(request_id)")
+        if "quantity" not in order_columns:
+            conn.execute("ALTER TABLE orders ADD COLUMN quantity INTEGER NOT NULL DEFAULT 1")
         user_columns = {row[1] for row in conn.execute("PRAGMA table_info(users)")}
         if "referrer_id" not in user_columns:
             conn.execute("ALTER TABLE users ADD COLUMN referrer_id INTEGER")
@@ -456,6 +462,7 @@ class Database:
         product: dict[str, Any],
         size: str,
         phone: str,
+        quantity: int = 1,
     ) -> tuple[int, bool]:
         conn = self.connection()
         now = utc_now()
@@ -465,12 +472,16 @@ class Database:
             if existing:
                 conn.execute("COMMIT")
                 return int(existing["id"]), False
+            try:
+                safe_quantity = max(1, min(int(quantity), 20))
+            except (TypeError, ValueError):
+                safe_quantity = 1
             cursor = conn.execute(
                 """
-                INSERT INTO orders(request_id, user_id, product_id, product_name, size, phone, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO orders(request_id, user_id, product_id, product_name, size, phone, quantity, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (request_id, user_id, str(product["id"]), product["name"], size, phone, now),
+                (request_id, user_id, str(product["id"]), product["name"], size, phone, safe_quantity, now),
             )
             order_id = int(cursor.lastrowid)
             conn.execute("DELETE FROM states WHERE user_id=?", (user_id,))
@@ -774,6 +785,9 @@ def inline_keyboard(rows: Iterable[Iterable[tuple[str, str]]]) -> dict[str, Any]
     for row in rows:
         buttons = []
         for label, target in row:
+            if target.startswith("webapp:"):
+                buttons.append({"text": label, "web_app": {"url": target.removeprefix("webapp:")}})
+                continue
             key = "url" if target.startswith(("https://", "http://", "tg://")) else "callback_data"
             buttons.append({"text": label, key: target})
         keyboard.append(buttons)
@@ -852,17 +866,29 @@ class BrandBot:
             return ""
         return f"https://t.me/{self.bot_username}?start=ref{user_id}"
 
+    def public_asset_url(self, value: Any) -> str:
+        """Turn a Mini App asset path into a public Telegram-readable URL."""
+        asset = str(value or "").strip()
+        if asset.startswith(("https://", "http://")):
+            return asset
+        if asset and self.settings.webapp_url.startswith("https://"):
+            parsed = urllib.parse.urlparse(self.settings.webapp_url)
+            base = f"{parsed.scheme}://{parsed.netloc}/"
+            return urllib.parse.urljoin(base, asset.lstrip("/"))
+        return ""
+
     # ------------------------------------------------------------------ menus
 
     def main_menu(self) -> dict[str, Any]:
-        return inline_keyboard(
-            [
-                [(f"{FIRE} СМОТРЕТЬ ДРОП", "catalog"), (f"{CROWN} LOOKBOOK", "lookbook")],
-                [("Подобрать размер", "size_guide"), ("О бренде", "about")],
-                [(f"{POINT} КАНАЛ БРЕНДА", self.settings.channel_url)],
-                [("\U0001F514 УЗНАТЬ ПЕРВЫМ", "profile"), (f"{BOX} ПРИВЕСТИ ДРУГА", "referral")],
-            ]
-        )
+        rows: list[list[tuple[str, str]]] = [
+            [(f"{FIRE} СМОТРЕТЬ ДРОП", "catalog"), (f"{CROWN} LOOKBOOK", "lookbook")],
+            [("Подобрать размер", "size_guide"), ("О бренде", "about")],
+            [(f"{POINT} КАНАЛ БРЕНДА", self.settings.channel_url)],
+            [("\U0001F514 УЗНАТЬ ПЕРВЫМ", "profile"), (f"{BOX} ПРИВЕСТИ ДРУГА", "referral")],
+        ]
+        if self.settings.webapp_url.startswith("https://"):
+            rows.insert(0, [(f"{BOLT} ОТКРЫТЬ MINIAPP", f"webapp:{self.settings.webapp_url}")])
+        return inline_keyboard(rows)
 
     def interest_menu(self) -> dict[str, Any]:
         rows = [[(category["name"].upper(), f"intr:{category['id']}")] for category in self.catalog.categories[:6]]
@@ -961,7 +987,7 @@ class BrandBot:
                 [("Назад", f"cat:{product['category']}")],
             ]
         )
-        photo = str(product.get("photo_url", "")).strip()
+        photo = self.public_asset_url(product.get("photo_url") or product.get("image"))
         if photo:
             self.api.send_photo(chat_id, photo, caption, keyboard)
         else:
@@ -1069,7 +1095,7 @@ class BrandBot:
             f"{BOX} <b>ОДНО ДЕЛО ПЕРЕД КОНТАКТОМ</b>\n\n"
             "Чтобы принять заявку и написать про дроп, нам нужны твой номер и "
             "согласие на обработку данных и на сообщения от бренда.\n\n"
-            "Никаких передач третьим лицам. Отписаться можно одной кнопкой в любой момент."
+            "Используем данные только для оформления заявки и связи по ней в рамках опубликованной политики. Отписаться можно одной кнопкой в любой момент."
         )
         if self.settings.privacy_url:
             text += f"\n\n{POINT} Политика: {esc(self.settings.privacy_url)}"
@@ -1181,7 +1207,11 @@ class BrandBot:
 
     def show_lookbook(self, chat_id: int, user_id: int) -> None:
         self.db.event(user_id, "lookbook_open")
-        photos = self.catalog.lookbook
+        photos = [
+            photo
+            for item in self.catalog.data.get("lookbook", [])
+            if (photo := self.public_asset_url(item.get("photo_url") or item.get("image")))
+        ]
         if not photos:
             self.api.send_message(
                 chat_id,
@@ -1191,7 +1221,7 @@ class BrandBot:
             )
             return
         try:
-            self.api.send_media_group(chat_id, [item["photo_url"] for item in photos], f"{CROWN} <b>LOOKBOOK</b>")
+            self.api.send_media_group(chat_id, photos, f"{CROWN} <b>LOOKBOOK</b>")
         except Exception:
             LOG.exception("Failed to send lookbook album")
             self.api.send_message(chat_id, "Не получилось отправить альбом. Загляни в канал — там всё выложим.", self.main_menu())
@@ -1247,7 +1277,7 @@ class BrandBot:
             self.api.send_message(
                 int(order["user_id"]),
                 f"{BOX} <b>ЗАЯВКА #{order_id}: {esc(label.upper())}</b>\n\n"
-                f"{esc(order['product_name'])} · размер {esc(order['size'])}\n"
+                f"{esc(order['product_name'])} · размер {esc(order['size'])} · {int(order['quantity'] or 1)} шт.\n"
                 f"{esc(ORDER_STATUS_MESSAGES.get(status, 'Статус заявки обновлён.'))}",
                 self.main_menu(),
             )
@@ -1299,7 +1329,7 @@ class BrandBot:
                     label = ORDER_STATUS_LABELS.get(status, status)
                     text = (
                         f"<b>#{row['id']} · {esc(label.upper())}</b>\n"
-                        f"{esc(row['product_name'])} · размер {esc(row['size'])}\n"
+                        f"{esc(row['product_name'])} · размер {esc(row['size'])} · {int(row['quantity'] or 1)} шт.\n"
                         f"Клиент: {esc(username or str(row['user_id']))}\n"
                         f"Телефон: {esc(row['phone'])}"
                     )
@@ -1556,7 +1586,105 @@ class BrandBot:
         self.db.event(user_id, "broadcast_sent", {"delivered": delivered, "failed": failed, "segment": segment})
         self.api.send_message(chat_id, f"Готово. Доставлено: {delivered}. Ошибок: {failed}.")
 
-    # ------------------------------------------------------------------ input
+    # ------------------------------------------------------------------ miniapp + input
+
+    def handle_web_app_data(self, chat_id: int, user: dict[str, Any], raw_data: str) -> None:
+        """Accept an order sent by Telegram Web App ``sendData``.
+
+        The browser is never trusted with the price or product details: only
+        active product ids and sizes from the server-side catalog are accepted.
+        This keeps the miniapp convenient while the bot remains the source of
+        truth for the order and manager notification.
+        """
+        user_id = int(user["id"])
+        try:
+            payload = json.loads(raw_data)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            self.api.send_message(chat_id, "Не получилось прочитать заявку из витрины. Открой её ещё раз.", self.main_menu())
+            return
+        if not isinstance(payload, dict) or payload.get("type") != "order":
+            self.api.send_message(chat_id, "Неизвестный формат заявки. Открой витрину заново.", self.main_menu())
+            return
+        if payload.get("consent") is not True:
+            self.api.send_message(chat_id, "Без согласия на обработку данных заявку принять нельзя.", self.main_menu())
+            return
+        customer = payload.get("customer") if isinstance(payload.get("customer"), dict) else {}
+        phone = normalize_phone(str(customer.get("phone", "")))
+        if not phone:
+            self.api.send_message(chat_id, "Проверь номер телефона в витрине и отправь заявку ещё раз.", self.main_menu())
+            return
+        raw_items = payload.get("items")
+        if not isinstance(raw_items, list) or not raw_items or len(raw_items) > 20:
+            self.api.send_message(chat_id, "В заявке нет вещей или их слишком много. Проверь корзину.", self.main_menu())
+            return
+
+        valid_items: list[tuple[dict[str, Any], str, int]] = []
+        for raw_item in raw_items:
+            if not isinstance(raw_item, dict):
+                continue
+            product = self.catalog.get(str(raw_item.get("product_id", "")))
+            size = str(raw_item.get("size", ""))
+            if not product or size not in {str(item) for item in product.get("sizes", [])}:
+                continue
+            try:
+                quantity = max(1, min(int(raw_item.get("quantity", 1)), 20))
+            except (TypeError, ValueError):
+                quantity = 1
+            valid_items.append((product, size, quantity))
+        if not valid_items:
+            self.api.send_message(chat_id, "Некоторые вещи уже закончились. Обнови витрину и выбери снова.", self.main_menu())
+            return
+
+        self.db.set_phone(user_id, phone)
+        self.db.set_consent(user_id)
+        self.db.event(
+            user_id,
+            "webapp_order_submitted",
+            {"city": str(customer.get("city", ""))[:160], "items": len(valid_items), "name": str(customer.get("name", ""))[:80]},
+        )
+        request_base = re.sub(r"[^a-zA-Z0-9_-]", "", str(payload.get("request_id", "")))[:80] or f"web-{user_id}-{int(time.time())}"
+        created_orders: list[tuple[int, dict[str, Any], str, int]] = []
+        for index, (product, size, quantity) in enumerate(valid_items, start=1):
+            order_id, created = self.db.create_order(
+                f"{request_base}-{index}-{product['id']}-{size}",
+                user_id,
+                product,
+                size,
+                phone,
+                quantity,
+            )
+            if created:
+                created_orders.append((order_id, product, size, quantity))
+
+        if not created_orders:
+            self.api.send_message(chat_id, "Эта заявка уже была принята. Менеджер скоро свяжется с тобой.", self.main_menu())
+            return
+        order_lines = [
+            f"• {esc(product['name'])} · {esc(size)} · {quantity} шт."
+            for _, product, size, quantity in created_orders
+        ]
+        self.api.send_message(
+            chat_id,
+            f"{FIRE} <b>ЗАЯВКА ИЗ MINIAPP ПРИНЯТА</b>\n\n"
+            + "\n".join(order_lines)
+            + "\n\nМенеджер подтвердит наличие, оплату и доставку.",
+            self.main_menu(),
+        )
+        if self.settings.manager_chat_id:
+            name = str(customer.get("name", ""))[:80]
+            city = str(customer.get("city", ""))[:160]
+            manager_lines = [
+                f"{FIRE} <b>НОВАЯ MINIAPP-ЗАЯВКА</b>",
+                f"Клиент: {esc(name or user.get('first_name') or user_id)}",
+                f"Телефон: {esc(phone)}",
+                f"Город / доставка: {esc(city or 'не указано')}",
+                "",
+                *order_lines,
+            ]
+            try:
+                self.api.send_message(self.settings.manager_chat_id, "\n".join(manager_lines))
+            except Exception as exc:
+                LOG.warning("Could not notify manager about Web App order: %s", exc)
 
     def handle_callback(self, callback: dict[str, Any]) -> None:
         callback_id = callback["id"]
@@ -1663,6 +1791,11 @@ class BrandBot:
             if str(message.get("text", "")).startswith("/start"):
                 self.api.send_message(chat_id, "Открой бота в личке — там витрина и размеры.")
             return
+        web_app_data = message.get("web_app_data")
+        if isinstance(web_app_data, dict):
+            self.db.upsert_user(user)
+            self.handle_web_app_data(chat_id, user, str(web_app_data.get("data", "")))
+            return
         text = str(message.get("text", "")).strip()
         if text.startswith("/start"):
             # start() decides whether the user is new, so it must run the upsert itself.
@@ -1711,26 +1844,89 @@ class BrandBot:
             return False
 
 
-class HealthHandler(BaseHTTPRequestHandler):
-    def do_GET(self) -> None:
-        if self.path not in ("/", "/health"):
-            self.send_response(404)
-            self.end_headers()
-            return
-        body = b'{"status":"ok"}'
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
+class StorefrontHandler(BaseHTTPRequestHandler):
+    """Serve the Telegram Mini App and a read-only catalog endpoint.
+
+    Keeping the storefront on the same origin as the bot's health server means
+    the browser never needs to call localhost or a second private service. The
+    catalog endpoint exposes only active products; product validation for orders
+    still happens in ``BrandBot.handle_web_app_data``.
+    """
+
+    catalog: Catalog | None = None
+    settings: Settings | None = None
+    static_root = BASE_DIR / "miniapp"
+
+    def _write(self, body: bytes, content_type: str, status: int = 200, cache_control: str = "no-cache") -> None:
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", cache_control)
+        self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
         self.wfile.write(body)
+
+    def _not_found(self) -> None:
+        self._write(b"Not found", "text/plain; charset=utf-8", 404, "no-store")
+
+    def do_GET(self) -> None:
+        path = urllib.parse.urlparse(self.path).path
+        if path == "/health":
+            self._write(b'{"status":"ok","service":"vorozhbitov-shop"}', "application/json; charset=utf-8")
+            return
+        if path == "/api/catalog":
+            catalog = self.catalog
+            settings = self.settings
+            if not catalog:
+                self._not_found()
+                return
+            payload = {
+                "brand": catalog.data.get("brand", {"name": settings.brand_name if settings else "ВОРОЖБИТОВ"}),
+                "channel_url": settings.channel_url if settings else "",
+                "products": [product for product in catalog.data.get("products", []) if product.get("active", True)],
+                "categories": catalog.categories,
+                "lookbook": catalog.data.get("lookbook", []),
+            }
+            self._write(json.dumps(payload, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
+            return
+
+        relative = path.lstrip("/")
+        if relative in ("", "app", "app/"):
+            relative = "index.html"
+        elif relative.startswith("miniapp/"):
+            relative = relative.removeprefix("miniapp/") or "index.html"
+        candidate = (self.static_root / relative).resolve()
+        try:
+            candidate.relative_to(self.static_root.resolve())
+        except ValueError:
+            self._not_found()
+            return
+        if not candidate.is_file():
+            self._not_found()
+            return
+        try:
+            body = candidate.read_bytes()
+        except OSError:
+            self._not_found()
+            return
+        content_type = mimetypes.guess_type(candidate.name)[0] or "application/octet-stream"
+        if content_type.startswith("text/") or content_type in {"application/javascript", "image/svg+xml"}:
+            content_type += "; charset=utf-8"
+        cache = "public, max-age=3600" if candidate.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp", ".svg"} else "no-cache"
+        self._write(body, content_type, 200, cache)
 
     def log_message(self, format: str, *args: Any) -> None:
         return
 
 
-def start_health_server(port: int) -> ThreadingHTTPServer:
-    server = ThreadingHTTPServer(("0.0.0.0", port), HealthHandler)
-    threading.Thread(target=server.serve_forever, name="health-server", daemon=True).start()
+# Backwards-compatible name for health-check imports in small deployments.
+HealthHandler = StorefrontHandler
+
+
+def start_health_server(port: int, catalog: Catalog | None = None, settings: Settings | None = None) -> ThreadingHTTPServer:
+    handler = type("ConfiguredStorefrontHandler", (StorefrontHandler,), {"catalog": catalog, "settings": settings})
+    server = ThreadingHTTPServer(("0.0.0.0", port), handler)
+    threading.Thread(target=server.serve_forever, name="storefront-server", daemon=True).start()
     return server
 
 
@@ -1788,7 +1984,7 @@ def main() -> int:
     bot = BrandBot(settings, api, db, catalog)
     bot.bot_username = str(identity.get("username") or "")
     LOG.info("Starting @%s for brand %s", bot.bot_username, settings.brand_name)
-    health_server = start_health_server(settings.health_port)
+    health_server = start_health_server(settings.health_port, catalog, settings)
 
     def stop(*_: Any) -> None:
         STOP_EVENT.set()

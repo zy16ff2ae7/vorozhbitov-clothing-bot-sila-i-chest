@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="description" content="Официальная витрина одежды ВОРОЖБИТОВ. Ограниченные дропы, городская форма, вещи для своих.">
+  <title>ВОРОЖБИТОВ / SHOP 001</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand-lockup" href="#home" aria-label="Ворожбитов — в начало">
+        <span class="brand-mark">V</span>
+        <span class="brand-type"><strong>ВОРОЖБИТОВ</strong><small>SHOP / 001</small></span>
+      </a>
+      <div class="top-actions">
+        <button class="icon-button" id="savedButton" type="button" aria-label="Сохранённые товары">
+          <span class="icon" data-icon="bookmark"></span><span class="counter hidden" id="savedCount">0</span>
+        </button>
+        <button class="icon-button cart-trigger" id="cartButton" type="button" aria-label="Открыть заявку">
+          <span class="icon" data-icon="bag"></span><span class="counter hidden" id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero section-pad" id="home">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="pulse-dot"></span><span>DROP 001 / LIMITED RUN</span><span>06—26</span></div>
+          <h1>НЕ ДЛЯ<br><em>ВСЕХ.</em></h1>
+          <p class="hero-lead">Городская форма для тех, кто сам выбирает, что носить. Плотный материал. Чёткая посадка. Никаких повторов.</p>
+          <div class="hero-actions">
+            <button class="button button-primary" data-scroll="catalog" type="button">СМОТРЕТЬ ДРОП <span>↗</span></button>
+            <button class="text-button" data-open="manifesto" type="button">О концепции <span>↓</span></button>
+          </div>
+          <div class="hero-specs">
+            <div><strong>400</strong><span>GSM / MAX</span></div>
+            <div><strong>001</strong><span>LIMITED DROP</span></div>
+            <div><strong>RU</strong><span>MADE FOR CITY</span></div>
+          </div>
+        </div>
+        <div class="hero-visual image-frame">
+          <img src="assets/hero-drop.jpg" alt="Черный худи на бетонной плите" fetchpriority="high">
+          <div class="image-index">01 <span>/</span> 03</div>
+          <div class="image-stamp">NO<br>REPEAT</div>
+          <div class="corner-label">CORE UNIT<br><span>V—001</span></div>
+        </div>
+      </section>
+
+      <div class="ticker" aria-label="О бренде">
+        <div class="ticker-track"><span>MADE FOR THE ONES WHO KNOW</span><i>✳</i><span>DROP 001 / SMALL BATCH</span><i>✳</i><span>WEAR YOUR SIGNAL</span><i>✳</i><span>MADE FOR THE ONES WHO KNOW</span><i>✳</i></div>
+      </div>
+
+      <section class="section-pad catalog-section" id="catalog">
+        <div class="section-heading">
+          <div><span class="section-kicker">01 / ВИТРИНА</span><h2>СМОТРИ,<br><em>ЧТО ОСТАЛОСЬ.</em></h2></div>
+          <span class="item-count" id="productCount">— ITEMS</span>
+        </div>
+        <div class="category-row" id="categoryChips" role="tablist" aria-label="Категории"></div>
+        <div class="catalog-tools">
+          <button class="filter-button" type="button" id="filterToggle"><span class="icon" data-icon="sliders"></span> ФИЛЬТРЫ <span class="tool-count hidden" id="filterCount">0</span></button>
+          <label class="search-field"><span class="icon" data-icon="search"></span><input id="searchInput" type="search" placeholder="Найти вещь" autocomplete="off"><button id="clearSearch" class="clear-search hidden" type="button" aria-label="Очистить поиск">×</button></label>
+        </div>
+        <div class="filter-panel hidden" id="filterPanel">
+          <div class="filter-panel-head"><strong>БЫСТРЫЙ ФИЛЬТР</strong><button class="text-button" id="resetFilters" type="button">Сбросить</button></div>
+          <div class="filter-options" id="filterOptions">
+            <button class="filter-chip active" data-stock="all" type="button">Все вещи</button>
+            <button class="filter-chip" data-stock="limited" type="button">Лимитированный дроп</button>
+            <button class="filter-chip" data-stock="available" type="button">В наличии</button>
+          </div>
+        </div>
+        <div class="product-grid" id="productGrid" aria-live="polite"></div>
+        <div class="empty-state hidden" id="emptyState"><span class="empty-mark">∅</span><h3>Ничего не нашлось</h3><p>Попробуй другой запрос или сбрось фильтры.</p><button class="button button-dark" id="emptyReset" type="button">ПОКАЗАТЬ ВСЁ</button></div>
+      </section>
+
+      <section class="manifesto section-pad" id="manifesto">
+        <div class="manifesto-label"><span class="section-kicker">02 / КОНЦЕПЦИЯ</span><span class="vertical-label">VOROZHBITOV / 2026</span></div>
+        <div class="manifesto-body">
+          <h2>ОДЕЖДА,<br>КОТОРАЯ<br>ДЕРЖИТ <em>ТЕМП.</em></h2>
+          <p>Это не костюм для чужого мнения. Это базовая форма: плотная, собранная, честная. Вещи ВОРОЖБИТОВ сделаны маленькими партиями, чтобы каждая вещь оставалась своей.</p>
+          <div class="manifesto-lines"><div><span>01</span><strong>ПЛОТНО</strong><small>Ткань, которую чувствуешь</small></div><div><span>02</span><strong>ПРЯМО</strong><small>Без лишнего на вещах</small></div><div><span>03</span><strong>СВОИМ</strong><small>Для тех, кто понял сигнал</small></div></div>
+        </div>
+      </section>
+
+      <section class="feature-section section-pad" id="lookbook">
+        <div class="section-heading compact"><div><span class="section-kicker">03 / ВИЗУАЛЬНЫЙ ЖУРНАЛ</span><h2>В ПОЛЕ.</h2></div><span class="item-count">FIELD NOTES / 001</span></div>
+        <div class="lookbook-grid">
+          <figure class="lookbook-card lookbook-main"><img src="assets/city-cargo.jpg" alt="Карго на индустриальном полу"><figcaption><span>FIELD NOTE 01</span><strong>CITY / UTILITY</strong></figcaption></figure>
+          <figure class="lookbook-card"><img src="assets/heavy-hoodie.jpg" alt="Черный худи крупным планом"><figcaption><span>FIELD NOTE 02</span><strong>HEAVY / 400 GSM</strong></figcaption></figure>
+          <div class="lookbook-note"><span class="red-slash">//</span><p>Снято без декораций. Так выглядит вещь, когда её уже носят.</p><button class="button button-outline" data-scroll="catalog" type="button">В ВИТРИНУ <span>↗</span></button></div>
+        </div>
+      </section>
+
+      <section class="join-banner section-pad" id="join">
+        <div><span class="section-kicker">04 / ЗАКРЫТЫЙ СИГНАЛ</span><h2>УЗНАЙ<br><em>ПЕРВЫМ.</em></h2><p>Новые дропы, возвраты размеров и закрытые релизы — в одном сообщении.</p></div>
+        <div class="join-actions"><button class="button button-primary" id="channelButton" type="button">ОТКРЫТЬ КАНАЛ <span>↗</span></button><button class="button button-ghost" id="shareButton" type="button"><span class="icon" data-icon="share"></span> ПРИГЛАСИТЬ СВОИХ</button></div>
+      </section>
+
+      <section class="faq-section section-pad" id="faq">
+        <div class="section-heading compact"><div><span class="section-kicker">05 / БЕЗ ЛИШНИХ ВОПРОСОВ</span><h2>КАК ЭТО<br><em>РАБОТАЕТ.</em></h2></div></div>
+        <div class="faq-list">
+          <details open><summary><span>01</span> Как заказать?</summary><p>Выбери вещь и размер, добавь в заявку и оставь номер. Менеджер подтвердит наличие, оплату и способ доставки.</p></details>
+          <details><summary><span>02</span> Есть ли доставка?</summary><p>Да. После заявки менеджер уточнит город и предложит доступный способ доставки. Стоимость и сроки зависят от адреса.</p></details>
+          <details><summary><span>03</span> Что с размером?</summary><p>В карточке есть доступные размеры и посадка. Если нужного нет, нажми «Ждать размер» — отправим сообщение, когда он вернётся.</p></details>
+          <details><summary><span>04</span> Можно вернуть?</summary><p>Возврат и обмен оформляются по правилам продавца и действующему законодательству. Уточни детали у менеджера до оплаты.</p></details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer section-pad">
+      <div class="footer-brand"><span class="brand-mark">V</span><div><strong>ВОРОЖБИТОВ</strong><small>SHOP / 001</small></div></div>
+      <div class="footer-meta"><span>© 2026 / ALL RIGHTS RESERVED</span><span>MADE FOR THE ONES WHO KNOW</span></div>
+    </footer>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Основная навигация">
+    <button class="bottom-link active" data-scroll="home" type="button"><span class="icon" data-icon="home"></span><small>Главная</small></button>
+    <button class="bottom-link" data-scroll="catalog" type="button"><span class="icon" data-icon="grid"></span><small>Дроп</small></button>
+    <button class="bottom-link" data-scroll="lookbook" type="button"><span class="icon" data-icon="eye"></span><small>Поле</small></button>
+    <button class="bottom-link bottom-cart" id="bottomCartButton" type="button"><span class="icon" data-icon="bag"></span><small>Заявка</small><b class="nav-badge hidden" id="bottomCartCount">0</b></button>
+  </nav>
+
+  <div class="modal-backdrop hidden" id="productModal" role="dialog" aria-modal="true" aria-label="Карточка товара">
+    <div class="product-sheet">
+      <button class="sheet-close" data-close="productModal" type="button" aria-label="Закрыть">×</button>
+      <div class="sheet-image image-frame"><img id="sheetImage" alt=""><span class="sheet-badge" id="sheetBadge"></span><button class="save-product" id="sheetSave" type="button" aria-label="Сохранить"><span class="icon" data-icon="bookmark"></span></button></div>
+      <div class="sheet-content"><div class="sheet-kicker" id="sheetKicker">DROP 001 / CORE</div><h2 id="sheetTitle">—</h2><div class="sheet-price" id="sheetPrice">—</div><p class="sheet-description" id="sheetDescription">—</p><div class="sheet-facts" id="sheetFacts"></div><div class="size-block"><div class="size-heading"><strong>РАЗМЕР</strong><button class="text-button" id="sizeGuideButton" type="button">Таблица размеров ↗</button></div><div class="size-list" id="sizeList"></div><p class="size-hint" id="sizeHint">Выбери размер, чтобы добавить вещь в заявку.</p></div><button class="button button-primary full-button" id="addToCartButton" type="button">ДОБАВИТЬ В ЗАЯВКУ <span>+</span></button><div class="sheet-details" id="sheetDetails"></div></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="cartModal" role="dialog" aria-modal="true" aria-label="Заявка">
+    <div class="cart-sheet"><div class="sheet-header"><div><span class="section-kicker">ЗАЯВКА / 001</span><h2>ТВОИ ВЕЩИ.</h2></div><button class="sheet-close" data-close="cartModal" type="button" aria-label="Закрыть">×</button></div><div class="cart-content" id="cartContent"></div><div class="cart-checkout hidden" id="checkoutForm"><div class="form-rule"></div><div class="checkout-total"><span>ИТОГО</span><strong id="cartTotal">0 ₽</strong></div><label class="field-label">ИМЯ<input id="checkoutName" type="text" placeholder="Как к тебе обращаться?"></label><label class="field-label">ТЕЛЕФОН<input id="checkoutPhone" type="tel" placeholder="+7 900 000-00-00" inputmode="tel"></label><label class="field-label">ГОРОД / ДОСТАВКА<input id="checkoutCity" type="text" placeholder="Город и удобный способ доставки"></label><label class="consent-check"><input id="checkoutConsent" type="checkbox"><span>Соглашаюсь на обработку данных для связи по заявке.</span></label><button class="button button-primary full-button" id="submitOrder" type="button">ОТПРАВИТЬ ЗАЯВКУ <span>↗</span></button><p class="form-note">Оплата не списывается сейчас. Менеджер сначала подтвердит наличие.</p></div></div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="sizeGuideModal" role="dialog" aria-modal="true" aria-label="Таблица размеров"><div class="info-sheet"><div class="sheet-header"><div><span class="section-kicker">ПОДСКАЗКА / 001</span><h2>РАЗМЕРЫ.</h2></div><button class="sheet-close" data-close="sizeGuideModal" type="button" aria-label="Закрыть">×</button></div><p class="info-lead">Посадка у вещей свободная. Если сомневаешься между двумя — бери больший для более объемного силуэта.</p><div class="size-table"><div><span>РАЗМЕР</span><span>ГРУДЬ</span><span>ДЛИНА</span></div><div><b>S</b><span>112 см</span><span>70 см</span></div><div><b>M</b><span>118 см</span><span>72 см</span></div><div><b>L</b><span>124 см</span><span>74 см</span></div><div><b>XL</b><span>130 см</span><span>76 см</span></div></div><p class="form-note">Замеры ориентировочные. Точную консультацию даст менеджер.</p></div></div>
+  </div>
+
+  <div class="success-toast hidden" id="successToast"><span class="success-icon">✓</span><div><strong>ЗАЯВКА УШЛА.</strong><small>Менеджер свяжется с тобой для подтверждения.</small></div><button type="button" id="closeToast" aria-label="Закрыть">×</button></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

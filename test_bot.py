@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 from pathlib import Path
 
-from bot import BASE_DIR, Catalog, Database, REF_RE, Settings, ensure_catalog_exists, normalize_phone, slugify
+from bot import BASE_DIR, BrandBot, Catalog, Database, REF_RE, Settings, TelegramAPI, ensure_catalog_exists, normalize_phone, slugify
 
 
 def make_db(directory: str) -> Database:
@@ -209,6 +209,64 @@ class BotTests(unittest.TestCase):
             self.assertEqual(db.broadcast_audience("consent"), [11])
             self.assertEqual(sorted(db.broadcast_audience("all")), [11, 12])
             self.assertEqual(db.stats()["consents"], 1)
+
+    def test_webapp_order_is_validated_against_catalog_and_stored(self):
+        class FakeAPI(TelegramAPI):
+            def __init__(self):
+                self.sent = []
+
+            def send_message(self, chat_id, text, reply_markup=None):
+                self.sent.append((chat_id, text, reply_markup))
+                return {"message_id": len(self.sent)}
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            catalog_path = root / "catalog.json"
+            shutil.copy(Path(__file__).with_name("catalog.json"), catalog_path)
+            settings = Settings(
+                token="fake",
+                admin_ids=frozenset(),
+                channel_url="https://t.me/channel",
+                webapp_url="",
+                manager_chat_id=None,
+                brand_name="ВОРОЖБИТОВ",
+                support_username="",
+                database_path=root / "bot.sqlite3",
+                catalog_path=catalog_path,
+                health_port=8080,
+                giveaway_min_invites=3,
+                privacy_url="",
+            )
+            db = make_db(directory)
+            catalog = Catalog(catalog_path)
+            api = FakeAPI()
+            brand_bot = BrandBot(settings, api, db, catalog)
+            user = {"id": 77, "first_name": "Buyer", "username": "buyer"}
+            payload = {
+                "type": "order",
+                "request_id": "web-test-001",
+                "consent": True,
+                "customer": {"name": "Buyer", "phone": "8 (999) 123-45-67", "city": "Могилёв"},
+                "items": [
+                    {"product_id": "drop-tee-001", "size": "M", "quantity": 2},
+                    {"product_id": "missing", "size": "M", "quantity": 99},
+                ],
+            }
+            brand_bot.handle_update({
+                "update_id": 1,
+                "message": {
+                    "chat": {"id": 77, "type": "private"},
+                    "from": user,
+                    "web_app_data": {"data": json.dumps(payload, ensure_ascii=False)},
+                },
+            })
+            self.assertEqual(db.stats()["orders"], 1)
+            order = db.recent_orders(1)[0]
+            self.assertEqual(order["product_id"], "drop-tee-001")
+            self.assertEqual(order["quantity"], 2)
+            self.assertEqual(order["phone"], "+79991234567")
+            self.assertTrue(db.has_consent(77))
+            self.assertIn("MINIAPP", api.sent[-1][1])
 
     def test_invalid_catalog_category_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
