@@ -1,0 +1,75 @@
+{
+  "categories": [
+    { "id": "drop", "name": "Дроп 001" },
+    { "id": "hoodie", "name": "Худи" },
+    { "id": "tee", "name": "Футболки" },
+    { "id": "bottom", "name": "Низ" },
+    { "id": "access", "name": "Аксессуары" }
+  ],
+  "products": [
+    {
+      "id": "drop-tee-001",
+      "category": "drop",
+      "name": "DROP 001 TEE",
+      "price": "4 900 ₽",
+      "sizes": ["S", "M", "L", "XL"],
+      "description": "Первый тираж бренда. Плотный хлопок, свободный крой, графика только для своих. Больше этот принт не повторится.",
+      "photo_url": "",
+      "active": true
+    },
+    {
+      "id": "drop-hoodie-001",
+      "category": "drop",
+      "name": "DROP 001 HOODIE",
+      "price": "9 900 ₽",
+      "sizes": ["M", "L", "XL"],
+      "description": "Тяжёлое полотно, объёмный силуэт, капюшон с двойной строчкой. Разошлём тираж — и всё, партии больше не будет.",
+      "photo_url": "",
+      "active": true
+    },
+    {
+      "id": "hoodie-heavy-002",
+      "category": "hoodie",
+      "name": "HEAVY HOODIE",
+      "price": "10 500 ₽",
+      "sizes": ["S", "M", "L", "XL"],
+      "description": "400 г/м². Держит форму после сотни стирок. Минимум графики, максимум посадки.",
+      "photo_url": "",
+      "active": true
+    },
+    {
+      "id": "tee-basic-002",
+      "category": "tee",
+      "name": "BASE TEE",
+      "price": "3 900 ₽",
+      "sizes": ["S", "M", "L", "XL"],
+      "description": "Базовая футболка без лишнего. То, что носят каждый день и не хотят снимать.",
+      "photo_url": "",
+      "active": true
+    },
+    {
+      "id": "cargo-city-001",
+      "category": "bottom",
+      "name": "CITY CARGO",
+      "price": "8 500 ₽",
+      "sizes": ["S", "M", "L"],
+      "description": "Свободные карго с регулируемой посадкой и усиленными карманами. Город трёт — эти выдержат.",
+      "photo_url": "",
+      "active": true
+    },
+    {
+      "id": "cap-logo-001",
+      "category": "access",
+      "name": "LOGO CAP",
+      "price": "3 200 ₽",
+      "sizes": ["ONE SIZE"],
+      "description": "Плотная шестиклинка с вышивкой. Регулируемый размер. Мелкая партия.",
+      "photo_url": "",
+      "active": true
+    }
+  ],
+  "lookbook": [
+    { "photo_url": "", "caption": "Образ 1" },
+    { "photo_url": "", "caption": "Образ 2" }
+  ]
+}
