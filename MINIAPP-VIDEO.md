@@ -44,6 +44,25 @@
 `catalog.json → media.teaser_story_url` (можно CDN/объектное хранилище) и `media.story_link` (ссылка на бота; виджет-ссылка
 показывается только премиум-пользователям). Пока поле пустое, фронт берёт `assets/video/teaser-720.mp4` относительно текущего origin.
 
+
+### Рендер для сторис от имени бота (готов)
+
+`miniapp/assets/video/teaser-story-h265.mp4` — 720×1280, HEVC (hvc1) Main, yuv420p, ключевой кадр ровно каждую секунду
+(`keyint=30:min-keyint=30:scenecut=0` при 30 fps), AAC 128k, faststart, 30.8 с, 3.7 МБ. Это в точности требования
+`InputStoryContentVideo` (Bot API 9.x: H.265, 720×1280, keyframe каждую секунду, ≤30 МБ, ≤60 с).
+Команда пересборки (из `/home/user/sila-i-chest`, ffmpeg из `imageio-ffmpeg`):
+
+```
+ffmpeg -y -i video/sila-i-chest-teaser.mp4 -vf scale=720:1280:flags=lanczos \
+  -c:v libx265 -preset medium -crf 26 -tag:v hvc1 -pix_fmt yuv420p -g 30 -keyint_min 30 \
+  -x265-params keyint=30:min-keyint=30:scenecut=0 -c:a aac -b:a 128k -movflags +faststart \
+  video/sila-i-chest-story-h265.mp4
+```
+
+Проверка сетки ключевых кадров: `ffmpeg -i … -vf "select='eq(pict_type,I)',showinfo" -an -f null -` → 31 I-кадр, шаг 1.000 с.
+Сам вызов `postStory` в бота **не добавлен**: он требует права бота публиковать сторис в канале/бизнес-аккаунте
+(`business_connection_id`) — это решение владельца после согласования дропа. Файл лежит рядом, чтобы не пересобирать.
+
 ## Прод
 - За HTTPS-прокси лучше отдавать `/assets/video/` напрямую nginx/Caddy (Range и кеш из коробки, поток бота не занят видео).
 - Образ вырос на ~5 МБ (`COPY miniapp ./miniapp` уже включает `assets/video`).

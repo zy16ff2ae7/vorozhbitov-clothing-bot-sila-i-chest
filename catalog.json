@@ -241,6 +241,8 @@
     "teaser": "assets/video/teaser-720.mp4",
     "teaser_poster": "assets/video/teaser-poster.jpg",
     "teaser_story_url": "",
-    "story_link": ""
+    "story_link": "",
+    "teaser_story_file": "assets/video/teaser-story-h265.mp4",
+    "teaser_story_spec": "720x1280 H.265 keyint=1s, 30.8 s, 3.7 MB — under Bot API InputStoryContentVideo limits (<=30 MB, <=60 s)"
   }
 }
