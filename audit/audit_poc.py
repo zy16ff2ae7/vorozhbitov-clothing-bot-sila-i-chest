@@ -1,7 +1,7 @@
 """PoC-проверки гипотез аудита.
 
-Запуск из корня репозитория (рядом с bot.py):
-    python3 audit_poc.py
+Запуск из корня проекта:
+    PYTHONPATH=. python3 audit/audit_poc.py
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from pathlib import Path
 import bot as bot_module
 from bot import BrandBot, Catalog, Database, Settings, TelegramAPI
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent  # корень проекта (каталог с bot.py)
 bot_module.LOG.disabled = True
 
 
