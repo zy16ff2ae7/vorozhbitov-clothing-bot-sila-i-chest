@@ -14,7 +14,7 @@
     products: [
       { id: "tee-sila-i-chest-001", category: "drop", name: "СИЛА И ЧЕСТЬ / TEE", price: "4 900 ₽", sizes: ["S", "M", "L", "XL", "XXL"], description: "Чёрная футболка с уставной надписью «СИЛА И ЧЕСТЬ» на груди и мечом по позвоночнику. Первый тираж — один раз и без повторов.", image: "assets/img/front-night.jpg", images: ["assets/img/front-night.jpg", "assets/img/back-boxing.jpg", "assets/img/flatlay.jpg", "assets/img/crew.jpg", "assets/img/gym.jpg"], badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Прямой крой", details: ["Принт спереди: «СИЛА И ЧЕСТЬ», уставной шрифт", "Принт сзади: меч по позвоночнику, монограмма ВВ у ворота", "Плотная шелкография, не трескается", "Усиленная горловина"], stock_label: "Первый тираж", active: true },
       {"id": "tag-sila-i-chest-001", "category": "drop", "name": "СИЛА И ЧЕСТЬ / ЖЕТОН", "price": "1 900 ₽", "sizes": ["ONE SIZE"], "description": "Армейский жетон из нержавеющей стали с лазерной гравировкой. Лицевая сторона — монограмма ВВ с мечом, оборот — «СИЛА И ЧЕСТЬ» и личный номер тиража. Каждый жетон уникален: номер не повторяется.", "badge": "DROP 001 · NEW", "fit": "Нумерованный", "stock_label": "Тираж 100 шт.", "material": "Нержавеющая сталь · лазерная гравировка", "details": ["Сталь AISI 304, 50×29 мм, 2 мм", "Лазерная гравировка с двух сторон", "Личный номер № 00001–00100", "Шариковая цепочка 60 см в комплекте", "Фирменный зип-пакет"], "image": "assets/img/tag-front.jpg", "images": ["assets/img/tag-front.jpg", "assets/img/tag-back.jpg", "assets/img/tag-front-studio.jpg", "assets/img/bag-desk.jpg"], "real_photos": true, "personalization": {"label": "НОМЕР ЖЕТОНА", "hint": "Свободные номера подтвердит менеджер. Хочешь конкретный — напиши его здесь.", "placeholder": "например, 00063", "pattern": "^[0-9]{1,5}$", "optional": true}},
-      {"id": "set-sila-i-chest-001", "category": "drop", "name": "СИЛА И ЧЕСТЬ / НАБОР", "price": "6 300 ₽", "compare_price": "6 800 ₽", "sizes": ["S", "M", "L", "XL", "XXL"], "description": "Футболка «СИЛА И ЧЕСТЬ» и нумерованный стальной жетон в одном пакете. Размер — для футболки, номер жетона подберёт менеджер или укажи желаемый.", "badge": "DROP 001 · SET", "fit": "Футболка + жетон", "stock_label": "Пока есть номера", "material": "Хлопок 240 г/м² + сталь", "details": ["Футболка + жетон с номером", "Выгода 500 ₽ против покупки по отдельности", "Фирменный зип-пакет «ПУТЬ, ДОСТОЙНЫЙ ВОИНА»"], "image": "assets/img/bag-desk.jpg", "images": ["assets/img/bag-desk.jpg", "assets/img/front-night.jpg", "assets/img/tag-front.jpg", "assets/img/tag-back.jpg"], "real_photos": true, "personalization": {"label": "НОМЕР ЖЕТОНА", "hint": "Необязательно. Свободные номера подтвердит менеджер.", "placeholder": "например, 00063", "pattern": "^[0-9]{1,5}$", "optional": true}},
+      {"id": "set-sila-i-chest-001", "category": "drop", "active": false, "name": "СИЛА И ЧЕСТЬ / НАБОР", "price": "6 300 ₽", "compare_price": "6 800 ₽", "sizes": ["S", "M", "L", "XL", "XXL"], "description": "Футболка «СИЛА И ЧЕСТЬ» и нумерованный стальной жетон в одном пакете. Размер — для футболки, номер жетона подберёт менеджер или укажи желаемый.", "badge": "DROP 001 · SET", "fit": "Футболка + жетон", "stock_label": "Пока есть номера", "material": "Хлопок 240 г/м² + сталь", "details": ["Футболка + жетон с номером", "Выгода 500 ₽ против покупки по отдельности", "Фирменный зип-пакет «ПУТЬ, ДОСТОЙНЫЙ ВОИНА»"], "image": "assets/img/bag-desk.jpg", "images": ["assets/img/bag-desk.jpg", "assets/img/front-night.jpg", "assets/img/tag-front.jpg", "assets/img/tag-back.jpg"], "real_photos": true, "personalization": {"label": "НОМЕР ЖЕТОНА", "hint": "Необязательно. Свободные номера подтвердит менеджер.", "placeholder": "например, 00063", "pattern": "^[0-9]{1,5}$", "optional": true}},
       { id: "drop-tee-001", category: "drop", name: "CORE TEE / 001", price: "4 900 ₽", sizes: ["S", "M", "L", "XL"], description: "Плотный хлопок, свободный крой, минимальный сигнал на груди. Первый тираж — один раз и без повторов.", image: "assets/img/base-tee.jpg", badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Свободный крой", details: ["Плотный хлопок", "Усиленная горловина", "Бирка-сигнал внутри"], stock_label: "Осталось мало", active: true },
       { id: "drop-hoodie-001", category: "drop", name: "CORE HOODIE / 001", price: "9 900 ₽", sizes: ["M", "L", "XL"], description: "Тяжёлое полотно, объёмный силуэт, двойная строчка. Увидел — забирай: партия ограничена.", image: "assets/img/front-night.jpg", badge: "LIMITED", material: "100% хлопок · 400 г/м²", fit: "Объемный крой", details: ["Футер 3-нитка", "Капюшон с двойной строчкой", "Металлические наконечники"], stock_label: "Последний тираж", active: true },
       { id: "hoodie-heavy-002", category: "hoodie", name: "HEAVY HOODIE / 002", price: "10 500 ₽", sizes: ["S", "M", "L", "XL"], description: "400 г/м². Держит форму и темп города. Никакой лишней графики — только посадка и вес.", image: "assets/img/heavy-hoodie.jpg", badge: "CORE", material: "100% хлопок · 400 г/м²", fit: "Свободный крой", details: ["Мягкий начес", "Плотные манжеты", "Карман-кенгуру"], stock_label: "В наличии", active: true },
@@ -551,6 +551,39 @@
     } catch (_) { /* старые клиенты */ }
   }
 
+  // 3D-tilt: карточки и фото в шторке наклоняются за курсором (desktop),
+  // на тач-устройствах не мешает (pointer: fine). Возвращает «объём» из v1-прототипа.
+  function setupTilt() {
+    if (!(window.matchMedia && window.matchMedia("(pointer: fine)").matches)) return;
+    const grid = $("#productGrid");
+    if (grid) {
+      grid.addEventListener("pointermove", event => {
+        const card = event.target.closest(".product-card");
+        if (!card) return;
+        const r = card.getBoundingClientRect();
+        const px = (event.clientX - r.left) / r.width - 0.5;
+        const py = (event.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `perspective(900px) rotateX(${(-py * 5).toFixed(2)}deg) rotateY(${(px * 6).toFixed(2)}deg) translateY(-3px)`;
+      });
+      grid.addEventListener("pointerout", event => {
+        const card = event.target.closest(".product-card");
+        if (card && !card.contains(event.relatedTarget)) card.style.transform = "";
+      });
+    }
+    const sheetImage = $(".sheet-image");
+    if (sheetImage) {
+      sheetImage.addEventListener("pointermove", event => {
+        const img = $("#sheetImage");
+        if (!img) return;
+        const r = sheetImage.getBoundingClientRect();
+        const px = (event.clientX - r.left) / r.width - 0.5;
+        const py = (event.clientY - r.top) / r.height - 0.5;
+        img.style.transform = `perspective(1100px) rotateX(${(-py * 7).toFixed(2)}deg) rotateY(${(px * 8).toFixed(2)}deg) scale(1.02)`;
+      });
+      sheetImage.addEventListener("pointerleave", () => { const img = $("#sheetImage"); if (img) img.style.transform = ""; });
+    }
+  }
+
   function renderSkeleton(count = 4) {
     $("#productGrid").innerHTML = Array.from({ length: count }, (_, index) => `<article class="product-card skeleton" style="--card-index:${index}"><div class="product-image"></div><div class="product-info"><div class="product-topline"><span>·</span></div><h3>·</h3><div class="product-bottom"><strong class="product-price">·</strong></div></div></article>`).join("");
   }
@@ -781,6 +814,7 @@
   iconize();
   configureTelegram();
   bindEvents();
+  setupTilt();
   setupHeroVideo();
   setupStoryButton();
   updateCounters();

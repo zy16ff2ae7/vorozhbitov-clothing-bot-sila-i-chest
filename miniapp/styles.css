@@ -131,7 +131,9 @@ img { display: block; max-width: 100%; }
 .filter-options { display: flex; flex-wrap: wrap; gap: 7px; }
 .filter-chip { min-height: 29px; font-size: 8px; }
 .product-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; margin-top: 25px; }
-.product-card { position: relative; grid-column: span 4; min-width: 0; cursor: pointer; background: var(--surface); border: 1px solid var(--line-soft); transition: transform .25s, border-color .25s; }
+.product-card { position: relative; grid-column: span 4; min-width: 0; cursor: pointer; background: var(--surface); border: 1px solid var(--line-soft); transition: transform .25s, border-color .25s; transform-style: preserve-3d; will-change: transform; }
+.sheet-image { perspective: 1100px; }
+.sheet-image img { transition: transform .25s ease; will-change: transform; }
 .product-card:nth-child(1), .product-card:nth-child(4) { grid-column: span 5; }
 .product-card:nth-child(2), .product-card:nth-child(3), .product-card:nth-child(5), .product-card:nth-child(6) { grid-column: span 3; }
 .product-card:hover { border-color: var(--line); transform: translateY(-4px); }

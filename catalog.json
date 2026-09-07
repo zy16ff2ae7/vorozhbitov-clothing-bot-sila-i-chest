@@ -109,7 +109,7 @@
     {
       "id": "set-sila-i-chest-001",
       "category": "drop",
-      "active": true,
+      "active": false,
       "name": "СИЛА И ЧЕСТЬ / НАБОР",
       "price": "6 300 ₽",
       "compare_price": "6 800 ₽",
