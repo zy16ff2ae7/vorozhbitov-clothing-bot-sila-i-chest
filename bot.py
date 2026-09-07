@@ -10,6 +10,8 @@ Python 3.11+, standard library only.
 from __future__ import annotations
 
 import csv
+import hashlib
+import hmac
 import html
 import io
 import json
@@ -100,6 +102,46 @@ def ensure_catalog_exists(path: Path, seed_path: Path) -> bool:
         target.flush()
         os.fsync(target.fileno())
     return True
+
+
+def verify_init_data(init_data: str, bot_token: str, max_age: int = 24 * 3600) -> dict[str, Any] | None:
+    """Проверить подпись ``Telegram.WebApp.initData`` и вернуть распарсенные поля (с ``user`` как dict).
+
+    Алгоритм из документации Web Apps: secret = HMAC_SHA256(key="WebAppData", msg=bot_token);
+    hash = HMAC_SHA256(key=secret, msg=data_check_string), где data_check_string — все поля кроме
+    ``hash``, отсортированные по ключу, в виде ``key=value`` через ``\n``. Возвращает None при любой
+    ошибке (подпись, срок, формат) — вызывающий код отвечает 401.
+    """
+    if not init_data or not bot_token:
+        return None
+    try:
+        pairs = urllib.parse.parse_qsl(init_data, keep_blank_values=True, strict_parsing=True)
+    except ValueError:
+        return None
+    data = dict(pairs)
+    received = data.pop("hash", "")
+    if not received or len(data) != len(pairs) - 1:
+        return None
+    check_string = "\n".join(f"{key}={value}" for key, value in sorted(data.items()))
+    secret = hmac.new(b"WebAppData", bot_token.encode("utf-8"), hashlib.sha256).digest()
+    expected = hmac.new(secret, check_string.encode("utf-8"), hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(expected, received):
+        return None
+    try:
+        auth_date = int(data.get("auth_date", "0"))
+    except ValueError:
+        return None
+    if max_age and abs(time.time() - auth_date) > max_age:
+        return None
+    if "user" in data:
+        try:
+            user = json.loads(data["user"])
+        except (TypeError, ValueError):
+            return None
+        if not isinstance(user, dict) or "id" not in user:
+            return None
+        data["user"] = user
+    return data
 
 
 def esc(value: Any) -> str:
@@ -1743,8 +1785,11 @@ class BrandBot:
 
     # ------------------------------------------------------------------ miniapp + input
 
-    def handle_web_app_data(self, chat_id: int, user: dict[str, Any], raw_data: str) -> None:
-        """Accept an order sent by Telegram Web App ``sendData``.
+    def handle_web_app_data(self, chat_id: int, user: dict[str, Any], raw_data: str) -> dict[str, Any]:
+        """Accept an order sent by Telegram Web App (``sendData`` или ``POST /api/order``).
+
+        Возвращает словарь ``{"ok": bool, "error"?: str, "orders"?: [...]}`` — его же отдаёт HTTP-эндпоинт,
+        чтобы витрина показывала честный статус, а не «заявка ушла» вслепую.
 
         The browser is never trusted with the price or product details: only
         active product ids and sizes from the server-side catalog are accepted.
@@ -1755,25 +1800,20 @@ class BrandBot:
         try:
             payload = json.loads(raw_data)
         except (TypeError, ValueError, json.JSONDecodeError):
-            self.api.send_message(chat_id, "Не получилось прочитать заявку из витрины. Открой её ещё раз.", self.main_menu())
-            return
+            return self._webapp_reject(chat_id, "Не получилось прочитать заявку из витрины. Открой её ещё раз.")
         if not isinstance(payload, dict) or payload.get("type") != "order":
-            self.api.send_message(chat_id, "Неизвестный формат заявки. Открой витрину заново.", self.main_menu())
-            return
+            return self._webapp_reject(chat_id, "Неизвестный формат заявки. Открой витрину заново.")
         if payload.get("consent") is not True:
-            self.api.send_message(chat_id, "Без согласия на обработку данных заявку принять нельзя.", self.main_menu())
-            return
+            return self._webapp_reject(chat_id, "Без согласия на обработку данных заявку принять нельзя.")
         customer = payload.get("customer") if isinstance(payload.get("customer"), dict) else {}
         phone = normalize_phone(str(customer.get("phone", "")))
         if not phone:
-            self.api.send_message(chat_id, "Проверь номер телефона в витрине и отправь заявку ещё раз.", self.main_menu())
-            return
+            return self._webapp_reject(chat_id, "Проверь номер телефона в витрине и отправь заявку ещё раз.")
         raw_items = payload.get("items")
         if not isinstance(raw_items, list) or not raw_items or len(raw_items) > 20:
-            self.api.send_message(chat_id, "В заявке нет вещей или их слишком много. Проверь корзину.", self.main_menu())
-            return
+            return self._webapp_reject(chat_id, "В заявке нет вещей или их слишком много. Проверь корзину.")
 
-        valid_items: list[tuple[dict[str, Any], str, int]] = []
+        valid_items: list[tuple[dict[str, Any], str, int, str]] = []
         for raw_item in raw_items:
             if not isinstance(raw_item, dict):
                 continue
@@ -1785,10 +1825,18 @@ class BrandBot:
                 quantity = max(1, min(int(raw_item.get("quantity", 1)), 20))
             except (TypeError, ValueError):
                 quantity = 1
-            valid_items.append((product, size, quantity))
+            note = ""
+            rule = product.get("personalization") if isinstance(product.get("personalization"), dict) else None
+            if rule:
+                raw_note = re.sub(r"\s+", " ", str(raw_item.get("note", "") or "")).strip()[:40]
+                pattern = str(rule.get("pattern") or "")
+                if raw_note and pattern and not re.fullmatch(pattern, raw_note):
+                    raw_note = ""
+                if raw_note:
+                    note = f"{rule.get('label', 'Пожелание')}: {raw_note}"
+            valid_items.append((product, size, quantity, note))
         if not valid_items:
-            self.api.send_message(chat_id, "Некоторые вещи уже закончились. Обнови витрину и выбери снова.", self.main_menu())
-            return
+            return self._webapp_reject(chat_id, "Некоторые вещи уже закончились. Обнови витрину и выбери снова.")
 
         self.db.set_phone(user_id, phone)
         self.db.set_consent(user_id)
@@ -1798,8 +1846,8 @@ class BrandBot:
             {"city": str(customer.get("city", ""))[:160], "items": len(valid_items), "name": str(customer.get("name", ""))[:80]},
         )
         request_base = re.sub(r"[^a-zA-Z0-9_-]", "", str(payload.get("request_id", "")))[:80] or f"web-{user_id}-{int(time.time())}"
-        created_orders: list[tuple[int, dict[str, Any], str, int]] = []
-        for index, (product, size, quantity) in enumerate(valid_items, start=1):
+        created_orders: list[tuple[int, dict[str, Any], str, int, str]] = []
+        for index, (product, size, quantity, note) in enumerate(valid_items, start=1):
             order_id, created = self.db.create_order(
                 f"{request_base}-{index}-{product['id']}-{size}",
                 user_id,
@@ -1809,14 +1857,16 @@ class BrandBot:
                 quantity,
             )
             if created:
-                created_orders.append((order_id, product, size, quantity))
+                if note:
+                    self.db.event(user_id, "order_note", {"order_id": order_id, "note": note})
+                created_orders.append((order_id, product, size, quantity, note))
 
         if not created_orders:
             self.api.send_message(chat_id, "Эта заявка уже была принята. Менеджер скоро свяжется с тобой.", self.main_menu())
-            return
+            return {"ok": True, "duplicate": True, "orders": []}
         order_lines = [
-            f"• {esc(product['name'])} · {esc(size)} · {quantity} шт."
-            for _, product, size, quantity in created_orders
+            f"• {esc(product['name'])} · {esc(size)} · {quantity} шт." + (f" · {esc(note)}" if note else "")
+            for _, product, size, quantity, note in created_orders
         ]
         self.api.send_message(
             chat_id,
@@ -1840,6 +1890,20 @@ class BrandBot:
                 self.api.send_message(self.settings.manager_chat_id, "\n".join(manager_lines))
             except Exception as exc:
                 LOG.warning("Could not notify manager about Web App order: %s", exc)
+        return {
+            "ok": True,
+            "orders": [
+                {"id": order_id, "code": f"{order_id:05d}", "product_id": product["id"], "size": size, "quantity": quantity}
+                for order_id, product, size, quantity, _ in created_orders
+            ],
+        }
+
+    def _webapp_reject(self, chat_id: int, reason: str) -> dict[str, Any]:
+        try:
+            self.api.send_message(chat_id, reason, self.main_menu())
+        except Exception as exc:  # чат мог быть недоступен — HTTP-ответ важнее
+            LOG.warning("Could not send Web App rejection: %s", exc)
+        return {"ok": False, "error": reason}
 
     def handle_callback(self, callback: dict[str, Any]) -> None:
         callback_id = callback["id"]
@@ -2015,7 +2079,9 @@ class StorefrontHandler(BaseHTTPRequestHandler):
 
     catalog: Catalog | None = None
     settings: Settings | None = None
+    bot: "BrandBot | None" = None
     static_root = BASE_DIR / "miniapp"
+    MAX_BODY = 32 * 1024
 
     def _write(self, body: bytes, content_type: str, status: int = 200, cache_control: str = "no-cache") -> None:
         self.send_response(status)
@@ -2048,6 +2114,7 @@ class StorefrontHandler(BaseHTTPRequestHandler):
                 "categories": catalog.categories,
                 "lookbook": catalog.data.get("lookbook", []),
                 "media": catalog.data.get("media", {}),
+                "orders_endpoint": bool(self.bot is not None and settings and settings.token),
             }
             self._write(json.dumps(payload, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
             return
@@ -2142,6 +2209,57 @@ class StorefrontHandler(BaseHTTPRequestHandler):
     def do_HEAD(self) -> None:
         self.do_GET()
 
+    def _json(self, status: int, payload: dict[str, Any]) -> None:
+        self._write(json.dumps(payload, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8", status, "no-store")
+
+    def do_POST(self) -> None:
+        """``POST /api/order`` — заявка из Mini App напрямую в бот.
+
+        ``WebApp.sendData`` доставляется боту только когда приложение открыто с reply-клавиатуры;
+        из inline-кнопки, меню бота и по прямой ссылке данные теряются молча. Поэтому витрина шлёт
+        заявку сюда, подписывая её ``initData``; подпись проверяется секретом из токена бота.
+        """
+        path = urllib.parse.urlparse(self.path).path
+        if path != "/api/order":
+            self._json(404, {"ok": False, "error": "not found"})
+            return
+        bot = self.bot
+        settings = self.settings
+        if bot is None or settings is None or not settings.token:
+            self._json(503, {"ok": False, "error": "Приём заявок из витрины не настроен (нет токена бота)."})
+            return
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            length = -1
+        if length <= 0 or length > self.MAX_BODY:
+            self._json(413, {"ok": False, "error": "Слишком большая или пустая заявка."})
+            return
+        raw = self.rfile.read(length)
+        try:
+            body = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, ValueError):
+            self._json(400, {"ok": False, "error": "Невалидный JSON."})
+            return
+        if not isinstance(body, dict):
+            self._json(400, {"ok": False, "error": "Невалидная заявка."})
+            return
+        init_data = self.headers.get("X-Telegram-Init-Data") or str(body.get("init_data", ""))
+        verified = verify_init_data(init_data, settings.token)
+        if not verified or not isinstance(verified.get("user"), dict):
+            self._json(401, {"ok": False, "error": "Не удалось подтвердить, что запрос пришёл из Telegram. Открой витрину из бота."})
+            return
+        user = verified["user"]
+        try:
+            user_id = int(user["id"])
+            bot.db.upsert_user(user, source="webapp")
+            result = bot.handle_web_app_data(user_id, user, json.dumps(body.get("order", body), ensure_ascii=False))
+        except Exception as exc:
+            LOG.exception("Web App order failed: %s", exc)
+            self._json(500, {"ok": False, "error": "Не получилось сохранить заявку. Попробуй ещё раз или напиши боту."})
+            return
+        self._json(200 if result.get("ok") else 422, result)
+
     def log_message(self, format: str, *args: Any) -> None:
         return
 
@@ -2150,8 +2268,8 @@ class StorefrontHandler(BaseHTTPRequestHandler):
 HealthHandler = StorefrontHandler
 
 
-def start_health_server(port: int, catalog: Catalog | None = None, settings: Settings | None = None) -> ThreadingHTTPServer:
-    handler = type("ConfiguredStorefrontHandler", (StorefrontHandler,), {"catalog": catalog, "settings": settings})
+def start_health_server(port: int, catalog: Catalog | None = None, settings: Settings | None = None, bot: "BrandBot | None" = None) -> ThreadingHTTPServer:
+    handler = type("ConfiguredStorefrontHandler", (StorefrontHandler,), {"catalog": catalog, "settings": settings, "bot": bot})
     server = ThreadingHTTPServer(("0.0.0.0", port), handler)
     threading.Thread(target=server.serve_forever, name="storefront-server", daemon=True).start()
     return server
@@ -2211,7 +2329,7 @@ def main() -> int:
     bot = BrandBot(settings, api, db, catalog)
     bot.bot_username = str(identity.get("username") or "")
     LOG.info("Starting @%s for brand %s", bot.bot_username, settings.brand_name)
-    health_server = start_health_server(settings.health_port, catalog, settings)
+    health_server = start_health_server(settings.health_port, catalog, settings, bot)
 
     def stop(*_: Any) -> None:
         STOP_EVENT.set()

@@ -5,17 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0b0d">
   <meta name="description" content="Официальная витрина одежды ВОРОЖБИТОВ. Ограниченные дропы, городская форма, вещи для своих.">
-  <title>ВОРОЖБИТОВ / SHOP 001</title>
+  <title>ВОРОЖБИТОВ / СИЛА И ЧЕСТЬ</title>
+  <link rel="preload" href="assets/fonts/inter-900.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ruslan.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="vv-mark" viewBox="0 0 100 160"><g transform="translate(6.99,113.00) scale(0.12400,-0.12400)"><path d="M322 65Q390 65 433 76Q415 187 331 241Q322 152 322 65ZM70 300Q70 405 89 500H644Q599 360 472 297Q587 256 656 183Q647 90 613 0H110Q70 139 70 300ZM339 310Q388 323 430.0 355.0Q472 387 490 434Q410 434 360 429Q348 371 339 310Z"/></g><g fill="currentColor"><path d="M44 8 l5 6 -5 8 -5 -8z"/><rect x="42" y="21" width="4" height="20" rx="1"/><path d="M31 41 h26 l3 3 -3 3 h-26 l-3 -3z"/><path d="M41.2 47 h5.6 l0.9 70 L44 152 l-3.7 -35z"/><path d="M44 49 v92" stroke="#0b0b0d" stroke-width="1" opacity=".55"/></g><path d="M12 96 l5 -5 5 5 -5 5z M78 96 l5 -5 5 5 -5 5z"/></symbol></svg>
   <div class="noise" aria-hidden="true"></div>
   <div class="app-shell">
     <header class="topbar">
       <a class="brand-lockup" href="#home" aria-label="Ворожбитов — в начало">
-        <span class="brand-mark">V</span>
-        <span class="brand-type"><strong>ВОРОЖБИТОВ</strong><small>SHOP / 001</small></span>
+        <span class="brand-mark"><svg><use href="#vv-mark"/></svg></span>
+        <span class="brand-type"><strong>ВОРОЖБИТОВ</strong><small class="brand-tagline">ПУТЬ, ДОСТОЙНЫЙ ВОИНА</small></span>
       </a>
       <div class="top-actions">
         <button class="icon-button" id="savedButton" type="button" aria-label="Сохранённые товары">
@@ -31,16 +34,17 @@
       <section class="hero section-pad" id="home">
         <div class="hero-copy">
           <div class="eyebrow"><span class="pulse-dot"></span><span>DROP 001 / LIMITED RUN</span><span>06—26</span></div>
-          <h1>НЕ ДЛЯ<br><em>ВСЕХ.</em></h1>
-          <p class="hero-lead">Городская форма для тех, кто сам выбирает, что носить. Плотный материал. Чёткая посадка. Никаких повторов.</p>
+          <h1>СИЛА<br><em>И ЧЕСТЬ.</em></h1>
+          <p class="ustav brand-tagline" style="margin:14px 0 0;font-size:12px;">ПУТЬ, ДОСТОЙНЫЙ ВОИНА</p>
+          <p class="hero-lead">Футболка с уставной надписью и нумерованный стальной жетон. Маленький тираж, каждый номер — один раз.</p>
           <div class="hero-actions">
             <button class="button button-primary" data-scroll="catalog" type="button">СМОТРЕТЬ ДРОП <span>↗</span></button>
             <button class="text-button" data-open="manifesto" type="button">О концепции <span>↓</span></button>
           </div>
           <div class="hero-specs">
-            <div><strong>400</strong><span>GSM / MAX</span></div>
-            <div><strong>001</strong><span>LIMITED DROP</span></div>
-            <div><strong>RU</strong><span>MADE FOR CITY</span></div>
+            <div><strong>240</strong><span>Г/М² ХЛОПОК</span></div>
+            <div><strong>100</strong><span>ЖЕТОНОВ / НОМЕР</span></div>
+            <div><strong>001</strong><span>DROP</span></div>
           </div>
         </div>
         <div class="hero-visual image-frame" id="heroVisual">
@@ -50,11 +54,12 @@
           <img class="hero-fallback" src="assets/video/hero-poster.jpg" alt="Никита Ворожбитов в футболке СИЛА И ЧЕСТЬ на фоне Геликов" fetchpriority="high">
           <button class="hero-play hidden" id="heroPlay" type="button" aria-label="Запустить видео"><span>▶</span></button>
           <div class="corner-label">DROP 001<br><span>СИЛА И ЧЕСТЬ</span></div>
+          <span class="hero-monogram" aria-hidden="true"><svg><use href="#vv-mark"/></svg></span>
         </div>
       </section>
 
       <div class="ticker" aria-label="О бренде">
-        <div class="ticker-track"><span>MADE FOR THE ONES WHO KNOW</span><i>✳</i><span>DROP 001 / SMALL BATCH</span><i>✳</i><span>WEAR YOUR SIGNAL</span><i>✳</i><span>MADE FOR THE ONES WHO KNOW</span><i>✳</i></div>
+        <div class="ticker-track"><span>СИЛА И ЧЕСТЬ</span><i>✳</i><span>ПУТЬ, ДОСТОЙНЫЙ ВОИНА</span><i>✳</i><span>DROP 001 / 100 НОМЕРОВ</span><i>✳</i><span>СИЛА И ЧЕСТЬ</span><i>✳</i><span>ПУТЬ, ДОСТОЙНЫЙ ВОИНА</span><i>✳</i><span>DROP 001 / 100 НОМЕРОВ</span><i>✳</i></div>
       </div>
 
       <section class="section-pad catalog-section" id="catalog">
@@ -92,8 +97,8 @@
         <div class="section-heading compact"><div><span class="section-kicker">03 / ВИЗУАЛЬНЫЙ ЖУРНАЛ</span><h2>В ПОЛЕ.</h2></div><span class="item-count">FIELD NOTES / 001</span></div>
         <div class="lookbook-grid">
           <figure class="lookbook-card lookbook-main lookbook-video" id="teaserCard" role="button" tabindex="0" aria-label="Смотреть тизер дропа"><img src="assets/video/teaser-poster.jpg" alt="Тизер СИЛА И ЧЕСТЬ"><span class="play-badge" aria-hidden="true">▶</span><figcaption><span>FIELD NOTE 01 · 0:31</span><strong>СИЛА И ЧЕСТЬ / ТИЗЕР</strong></figcaption></figure>
-          <figure class="lookbook-card"><img src="assets/heavy-hoodie.jpg" alt="Черный худи крупным планом"><figcaption><span>FIELD NOTE 02</span><strong>HEAVY / 400 GSM</strong></figcaption></figure>
-          <div class="lookbook-note"><span class="red-slash">//</span><p>Снято без декораций. Так выглядит вещь, когда её уже носят.</p><button class="button button-outline" data-scroll="catalog" type="button">В ВИТРИНУ <span>↗</span></button></div>
+          <figure class="lookbook-card" id="lookbookReal" role="button" tabindex="0" aria-label="Открыть жетон"><img src="assets/img/tag-back-480.jpg" srcset="assets/img/tag-back-480.jpg 480w, assets/img/tag-back-800.jpg 800w" sizes="(max-width: 680px) 50vw, 25vw" alt="Стальной жетон СИЛА И ЧЕСТЬ № 00063 — реальное фото" loading="lazy"><figcaption><span>FIELD NOTE 02 · РЕАЛЬНОЕ ФОТО</span><strong>ЖЕТОН № 00063</strong></figcaption></figure>
+          <div class="lookbook-note"><span class="red-slash">//</span><p>Жетон и пакет — настоящие, с производства. Кадры с футболкой — превью съёмки: финальные фото заменим после дропа.</p><button class="button button-outline" data-scroll="catalog" type="button">В ВИТРИНУ <span>↗</span></button></div>
         </div>
       </section>
 
@@ -114,8 +119,8 @@
     </main>
 
     <footer class="footer section-pad">
-      <div class="footer-brand"><span class="brand-mark">V</span><div><strong>ВОРОЖБИТОВ</strong><small>SHOP / 001</small></div></div>
-      <div class="footer-meta"><span>© 2026 / ALL RIGHTS RESERVED</span><span>MADE FOR THE ONES WHO KNOW</span></div>
+      <div class="footer-brand"><span class="brand-mark"><svg><use href="#vv-mark"/></svg></span><div><strong>ВОРОЖБИТОВ</strong><small class="brand-tagline">ПУТЬ, ДОСТОЙНЫЙ ВОИНА</small></div></div>
+      <div class="footer-meta"><span>© 2026 / ВОРОЖБИТОВ</span><span class="ustav">СИЛА И ЧЕСТЬ</span></div>
     </footer>
   </div>
 
@@ -130,12 +135,14 @@
     <div class="product-sheet">
       <button class="sheet-close" data-close="productModal" type="button" aria-label="Закрыть">×</button>
       <div class="sheet-image image-frame"><img id="sheetImage" alt=""><span class="sheet-badge" id="sheetBadge"></span><button class="gallery-arrow prev hidden" id="galleryPrev" type="button" aria-label="Предыдущее фото">‹</button><button class="gallery-arrow next hidden" id="galleryNext" type="button" aria-label="Следующее фото">›</button><div class="gallery-dots" id="galleryDots"></div><button class="save-product" id="sheetSave" type="button" aria-label="Сохранить"><span class="icon" data-icon="bookmark"></span></button></div>
-      <div class="sheet-content"><div class="sheet-kicker" id="sheetKicker">DROP 001 / CORE</div><h2 id="sheetTitle">—</h2><div class="sheet-price" id="sheetPrice">—</div><p class="sheet-description" id="sheetDescription">—</p><div class="sheet-facts" id="sheetFacts"></div><div class="size-block"><div class="size-heading"><strong>РАЗМЕР</strong><button class="text-button" id="sizeGuideButton" type="button">Таблица размеров ↗</button></div><div class="size-list" id="sizeList"></div><p class="size-hint" id="sizeHint">Выбери размер, чтобы добавить вещь в заявку.</p></div><button class="button button-primary full-button" id="addToCartButton" type="button">ДОБАВИТЬ В ЗАЯВКУ <span>+</span></button><div class="sheet-details" id="sheetDetails"></div></div>
+      <div class="sheet-content"><div class="sheet-kicker" id="sheetKicker">DROP 001 / CORE</div><h2 id="sheetTitle">—</h2><div class="sheet-price"><span id="sheetPrice">—</span><span class="compare-price hidden" id="sheetComparePrice"></span></div><p class="sheet-description" id="sheetDescription">—</p><div class="sheet-facts" id="sheetFacts"></div><div class="size-block"><div class="size-heading"><strong>РАЗМЕР</strong><button class="text-button" id="sizeGuideButton" type="button">Таблица размеров ↗</button></div><div class="size-list" id="sizeList"></div><p class="size-hint" id="sizeHint">Выбери размер, чтобы добавить вещь в заявку.</p></div><div class="personalize hidden" id="personalizeBlock"><label class="field-label" id="personalizeLabel" for="personalizeInput">НОМЕР ЖЕТОНА</label><input id="personalizeInput" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="например, 00063"><small id="personalizeHint"></small><div class="tag-number-preview hidden" id="tagPreview"><span>№</span><b id="tagPreviewNumber">00000</b></div></div>
+      <div class="bundle-hint hidden" id="bundleHint" role="button" tabindex="0"></div>
+      <button class="button button-primary full-button" id="addToCartButton" type="button">ДОБАВИТЬ В ЗАЯВКУ <span>+</span></button><div class="sheet-details" id="sheetDetails"></div></div>
     </div>
   </div>
 
   <div class="modal-backdrop hidden" id="cartModal" role="dialog" aria-modal="true" aria-label="Заявка">
-    <div class="cart-sheet"><div class="sheet-header"><div><span class="section-kicker">ЗАЯВКА / 001</span><h2>ТВОИ ВЕЩИ.</h2></div><button class="sheet-close" data-close="cartModal" type="button" aria-label="Закрыть">×</button></div><div class="cart-content" id="cartContent"></div><div class="cart-checkout hidden" id="checkoutForm"><div class="form-rule"></div><div class="checkout-total"><span>ИТОГО</span><strong id="cartTotal">0 ₽</strong></div><label class="field-label">ИМЯ<input id="checkoutName" type="text" placeholder="Как к тебе обращаться?"></label><label class="field-label">ТЕЛЕФОН<input id="checkoutPhone" type="tel" placeholder="+7 900 000-00-00" inputmode="tel"></label><label class="field-label">ГОРОД / ДОСТАВКА<input id="checkoutCity" type="text" placeholder="Город и удобный способ доставки"></label><label class="consent-check"><input id="checkoutConsent" type="checkbox"><span>Соглашаюсь на обработку данных для связи по заявке.</span></label><button class="button button-primary full-button" id="submitOrder" type="button">ОТПРАВИТЬ ЗАЯВКУ <span>↗</span></button><p class="form-note">Оплата не списывается сейчас. Менеджер сначала подтвердит наличие.</p></div></div>
+    <div class="cart-sheet"><div class="sheet-header"><div><span class="section-kicker">ЗАЯВКА / 001</span><h2>ТВОИ ВЕЩИ.</h2></div><button class="sheet-close" data-close="cartModal" type="button" aria-label="Закрыть">×</button></div><div class="cart-content" id="cartContent"></div><div class="cart-checkout hidden" id="checkoutForm"><div class="form-rule"></div><div class="checkout-total"><span>ИТОГО</span><strong id="cartTotal">0 ₽</strong></div><label class="field-label">ИМЯ<input id="checkoutName" type="text" placeholder="Как к тебе обращаться?"></label><label class="field-label">ТЕЛЕФОН<input id="checkoutPhone" type="tel" placeholder="+7 900 000-00-00" inputmode="tel"></label><label class="field-label">ГОРОД / ДОСТАВКА<input id="checkoutCity" type="text" placeholder="Город и удобный способ доставки"></label><label class="consent-check"><input id="checkoutConsent" type="checkbox"><span>Соглашаюсь на обработку данных для связи по заявке.</span></label><button class="button button-primary full-button" id="submitOrder" type="button">ОТПРАВИТЬ ЗАЯВКУ <span>↗</span></button><p class="submit-state" id="submitState"></p><p class="form-note">Оплата не списывается сейчас. Менеджер сначала подтвердит наличие.</p></div></div>
   </div>
 
   <div class="modal-backdrop hidden" id="teaserModal" role="dialog" aria-modal="true" aria-label="Тизер дропа">
@@ -150,10 +157,10 @@
       </div>
     </div>
   </div>
-  <div class="modal-backdrop hidden" id="sizeGuideModal" role="dialog" aria-modal="true" aria-label="Таблица размеров"><div class="info-sheet"><div class="sheet-header"><div><span class="section-kicker">ПОДСКАЗКА / 001</span><h2>РАЗМЕРЫ.</h2></div><button class="sheet-close" data-close="sizeGuideModal" type="button" aria-label="Закрыть">×</button></div><p class="info-lead">Посадка у вещей свободная. Если сомневаешься между двумя — бери больший для более объемного силуэта.</p><div class="size-table"><div><span>РАЗМЕР</span><span>ГРУДЬ</span><span>ДЛИНА</span></div><div><b>S</b><span>112 см</span><span>70 см</span></div><div><b>M</b><span>118 см</span><span>72 см</span></div><div><b>L</b><span>124 см</span><span>74 см</span></div><div><b>XL</b><span>130 см</span><span>76 см</span></div></div><p class="form-note">Замеры ориентировочные. Точную консультацию даст менеджер.</p></div></div>
+  <div class="modal-backdrop hidden" id="sizeGuideModal" role="dialog" aria-modal="true" aria-label="Таблица размеров"><div class="info-sheet"><div class="sheet-header"><div><span class="section-kicker">ПОДСКАЗКА / 001</span><h2>РАЗМЕРЫ.</h2></div><button class="sheet-close" data-close="sizeGuideModal" type="button" aria-label="Закрыть">×</button></div><p class="info-lead">Посадка у вещей свободная. Если сомневаешься между двумя — бери больший для более объемного силуэта.</p><div class="size-table"><div><span>РАЗМЕР</span><span>ГРУДЬ</span><span>ДЛИНА</span></div><div><b>S</b><span>112 см</span><span>70 см</span></div><div><b>M</b><span>118 см</span><span>72 см</span></div><div><b>L</b><span>124 см</span><span>74 см</span></div><div><b>XL</b><span>130 см</span><span>76 см</span></div><div><b>XXL</b><span>136 см</span><span>78 см</span></div></div><p class="form-note">Замеры ориентировочные. Точную консультацию даст менеджер.</p></div></div>
   </div>
 
-  <div class="success-toast hidden" id="successToast"><span class="success-icon">✓</span><div><strong>ЗАЯВКА УШЛА.</strong><small>Менеджер свяжется с тобой для подтверждения.</small></div><button type="button" id="closeToast" aria-label="Закрыть">×</button></div>
+  <div class="success-toast hidden" id="successToast"><span class="success-icon">✓</span><div><strong class="ustav">ЗАЯВКА ПРИНЯТА.</strong><small id="successDetail">Менеджер свяжется с тобой для подтверждения.</small></div><button type="button" id="closeToast" aria-label="Закрыть">×</button></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="app.js"></script>

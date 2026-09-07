@@ -12,13 +12,15 @@
       { id: "access", name: "Аксессуары" }
     ],
     products: [
-      { id: "tee-sila-i-chest-001", category: "drop", name: "СИЛА И ЧЕСТЬ / TEE", price: "4 900 ₽", sizes: ["S", "M", "L", "XL", "XXL"], description: "Чёрная футболка с уставной надписью «СИЛА И ЧЕСТЬ» на груди и мечом по позвоночнику. Первый тираж — один раз и без повторов.", image: "assets/sila-i-chest/front-night.jpg", images: ["assets/sila-i-chest/front-night.jpg", "assets/sila-i-chest/back-boxing.jpg", "assets/sila-i-chest/flatlay.jpg", "assets/sila-i-chest/crew.jpg", "assets/sila-i-chest/gym.jpg"], badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Прямой крой", details: ["Принт спереди: «СИЛА И ЧЕСТЬ», уставной шрифт", "Принт сзади: меч по позвоночнику, монограмма ВВ у ворота", "Плотная шелкография, не трескается", "Усиленная горловина"], stock_label: "Первый тираж", active: true },
-      { id: "drop-tee-001", category: "drop", name: "CORE TEE / 001", price: "4 900 ₽", sizes: ["S", "M", "L", "XL"], description: "Плотный хлопок, свободный крой, минимальный сигнал на груди. Первый тираж — один раз и без повторов.", image: "assets/base-tee.jpg", badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Свободный крой", details: ["Плотный хлопок", "Усиленная горловина", "Бирка-сигнал внутри"], stock_label: "Осталось мало", active: true },
-      { id: "drop-hoodie-001", category: "drop", name: "CORE HOODIE / 001", price: "9 900 ₽", sizes: ["M", "L", "XL"], description: "Тяжёлое полотно, объёмный силуэт, двойная строчка. Увидел — забирай: партия ограничена.", image: "assets/hero-drop.jpg", badge: "LIMITED", material: "100% хлопок · 400 г/м²", fit: "Объемный крой", details: ["Футер 3-нитка", "Капюшон с двойной строчкой", "Металлические наконечники"], stock_label: "Последний тираж", active: true },
-      { id: "hoodie-heavy-002", category: "hoodie", name: "HEAVY HOODIE / 002", price: "10 500 ₽", sizes: ["S", "M", "L", "XL"], description: "400 г/м². Держит форму и темп города. Никакой лишней графики — только посадка и вес.", image: "assets/heavy-hoodie.jpg", badge: "CORE", material: "100% хлопок · 400 г/м²", fit: "Свободный крой", details: ["Мягкий начес", "Плотные манжеты", "Карман-кенгуру"], stock_label: "В наличии", active: true },
-      { id: "tee-basic-002", category: "tee", name: "EVERYDAY TEE / 002", price: "3 900 ₽", sizes: ["S", "M", "L", "XL"], description: "База на каждый день: плотная ткань, спокойная форма, вещь, которую не хочется снимать.", image: "assets/base-tee.jpg", badge: "EVERYDAY", material: "100% хлопок · 240 г/м²", fit: "Boxy fit", details: ["Гладкая фактура", "Плотная горловина", "Стирается без сюрпризов"], stock_label: "В наличии", active: true },
-      { id: "cargo-city-001", category: "bottom", name: "CITY CARGO / 001", price: "8 500 ₽", sizes: ["S", "M", "L"], description: "Свободные карго с регулируемой посадкой и усиленными карманами. Город не бережёт — эти выдержат.", image: "assets/city-cargo.jpg", badge: "UTILITY", material: "Плотный хлопок · ripstop", fit: "Relaxed fit", details: ["6 функциональных карманов", "Регулировка низа", "Усиленные швы"], stock_label: "Мало размеров", active: true },
-      { id: "cap-logo-001", category: "access", name: "SIGNAL CAP / 001", price: "3 200 ₽", sizes: ["ONE SIZE"], description: "Плотная шестиклинка с маленькой красной меткой. Никаких громких логотипов — свой считывает.", image: "assets/logo-cap.jpg", badge: "SIGNAL", material: "100% хлопок", fit: "Регулируемый размер", details: ["Металлическая застежка", "Вышитая метка", "Внутренняя лента"], stock_label: "В наличии", active: true }
+      { id: "tee-sila-i-chest-001", category: "drop", name: "СИЛА И ЧЕСТЬ / TEE", price: "4 900 ₽", sizes: ["S", "M", "L", "XL", "XXL"], description: "Чёрная футболка с уставной надписью «СИЛА И ЧЕСТЬ» на груди и мечом по позвоночнику. Первый тираж — один раз и без повторов.", image: "assets/img/front-night.jpg", images: ["assets/img/front-night.jpg", "assets/img/back-boxing.jpg", "assets/img/flatlay.jpg", "assets/img/crew.jpg", "assets/img/gym.jpg"], badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Прямой крой", details: ["Принт спереди: «СИЛА И ЧЕСТЬ», уставной шрифт", "Принт сзади: меч по позвоночнику, монограмма ВВ у ворота", "Плотная шелкография, не трескается", "Усиленная горловина"], stock_label: "Первый тираж", active: true },
+      {"id": "tag-sila-i-chest-001", "category": "drop", "name": "СИЛА И ЧЕСТЬ / ЖЕТОН", "price": "1 900 ₽", "sizes": ["ONE SIZE"], "description": "Армейский жетон из нержавеющей стали с лазерной гравировкой. Лицевая сторона — монограмма ВВ с мечом, оборот — «СИЛА И ЧЕСТЬ» и личный номер тиража. Каждый жетон уникален: номер не повторяется.", "badge": "DROP 001 · NEW", "fit": "Нумерованный", "stock_label": "Тираж 100 шт.", "material": "Нержавеющая сталь · лазерная гравировка", "details": ["Сталь AISI 304, 50×29 мм, 2 мм", "Лазерная гравировка с двух сторон", "Личный номер № 00001–00100", "Шариковая цепочка 60 см в комплекте", "Фирменный зип-пакет"], "image": "assets/img/tag-front.jpg", "images": ["assets/img/tag-front.jpg", "assets/img/tag-back.jpg", "assets/img/tag-front-studio.jpg", "assets/img/bag-desk.jpg"], "real_photos": true, "personalization": {"label": "НОМЕР ЖЕТОНА", "hint": "Свободные номера подтвердит менеджер. Хочешь конкретный — напиши его здесь.", "placeholder": "например, 00063", "pattern": "^[0-9]{1,5}$", "optional": true}},
+      {"id": "set-sila-i-chest-001", "category": "drop", "name": "СИЛА И ЧЕСТЬ / НАБОР", "price": "6 300 ₽", "compare_price": "6 800 ₽", "sizes": ["S", "M", "L", "XL", "XXL"], "description": "Футболка «СИЛА И ЧЕСТЬ» и нумерованный стальной жетон в одном пакете. Размер — для футболки, номер жетона подберёт менеджер или укажи желаемый.", "badge": "DROP 001 · SET", "fit": "Футболка + жетон", "stock_label": "Пока есть номера", "material": "Хлопок 240 г/м² + сталь", "details": ["Футболка + жетон с номером", "Выгода 500 ₽ против покупки по отдельности", "Фирменный зип-пакет «ПУТЬ, ДОСТОЙНЫЙ ВОИНА»"], "image": "assets/img/bag-desk.jpg", "images": ["assets/img/bag-desk.jpg", "assets/img/front-night.jpg", "assets/img/tag-front.jpg", "assets/img/tag-back.jpg"], "real_photos": true, "personalization": {"label": "НОМЕР ЖЕТОНА", "hint": "Необязательно. Свободные номера подтвердит менеджер.", "placeholder": "например, 00063", "pattern": "^[0-9]{1,5}$", "optional": true}},
+      { id: "drop-tee-001", category: "drop", name: "CORE TEE / 001", price: "4 900 ₽", sizes: ["S", "M", "L", "XL"], description: "Плотный хлопок, свободный крой, минимальный сигнал на груди. Первый тираж — один раз и без повторов.", image: "assets/img/base-tee.jpg", badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Свободный крой", details: ["Плотный хлопок", "Усиленная горловина", "Бирка-сигнал внутри"], stock_label: "Осталось мало", active: true },
+      { id: "drop-hoodie-001", category: "drop", name: "CORE HOODIE / 001", price: "9 900 ₽", sizes: ["M", "L", "XL"], description: "Тяжёлое полотно, объёмный силуэт, двойная строчка. Увидел — забирай: партия ограничена.", image: "assets/img/front-night.jpg", badge: "LIMITED", material: "100% хлопок · 400 г/м²", fit: "Объемный крой", details: ["Футер 3-нитка", "Капюшон с двойной строчкой", "Металлические наконечники"], stock_label: "Последний тираж", active: true },
+      { id: "hoodie-heavy-002", category: "hoodie", name: "HEAVY HOODIE / 002", price: "10 500 ₽", sizes: ["S", "M", "L", "XL"], description: "400 г/м². Держит форму и темп города. Никакой лишней графики — только посадка и вес.", image: "assets/img/heavy-hoodie.jpg", badge: "CORE", material: "100% хлопок · 400 г/м²", fit: "Свободный крой", details: ["Мягкий начес", "Плотные манжеты", "Карман-кенгуру"], stock_label: "В наличии", active: true },
+      { id: "tee-basic-002", category: "tee", name: "EVERYDAY TEE / 002", price: "3 900 ₽", sizes: ["S", "M", "L", "XL"], description: "База на каждый день: плотная ткань, спокойная форма, вещь, которую не хочется снимать.", image: "assets/img/base-tee.jpg", badge: "EVERYDAY", material: "100% хлопок · 240 г/м²", fit: "Boxy fit", details: ["Гладкая фактура", "Плотная горловина", "Стирается без сюрпризов"], stock_label: "В наличии", active: true },
+      { id: "cargo-city-001", category: "bottom", name: "CITY CARGO / 001", price: "8 500 ₽", sizes: ["S", "M", "L"], description: "Свободные карго с регулируемой посадкой и усиленными карманами. Город не бережёт — эти выдержат.", image: "assets/img/city-cargo.jpg", badge: "UTILITY", material: "Плотный хлопок · ripstop", fit: "Relaxed fit", details: ["6 функциональных карманов", "Регулировка низа", "Усиленные швы"], stock_label: "Мало размеров", active: true },
+      { id: "cap-logo-001", category: "access", name: "SIGNAL CAP / 001", price: "3 200 ₽", sizes: ["ONE SIZE"], description: "Плотная шестиклинка с маленькой красной меткой. Никаких громких логотипов — свой считывает.", image: "assets/img/logo-cap.jpg", badge: "SIGNAL", material: "100% хлопок", fit: "Регулируемый размер", details: ["Металлическая застежка", "Вышитая метка", "Внутренняя лента"], stock_label: "В наличии", active: true }
     ]
   };
 
@@ -44,7 +46,10 @@
     selectedSize: null,
     galleryIndex: 0,
     toastTimer: null,
-    loadedFromApi: false
+    loadedFromApi: false,
+    manifest: {},
+    note: "",
+    submitting: false
   };
 
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -71,7 +76,27 @@
   }
 
   function imageFor(product) {
-    return String(product.image || product.image_url || "assets/base-tee.jpg");
+    return String(product.image || product.image_url || "assets/img/base-tee.jpg");
+  }
+
+  // manifest.json (tools/optimize_images.py) → srcset WebP/JPEG + LQIP-плейсхолдер.
+  function manifestEntry(src) {
+    const key = String(src || "").replace(/^.*\//, "").replace(/\.(jpe?g|png|webp)$/i, "");
+    return state.manifest[key] || null;
+  }
+
+  function pictureFor(src, alt, sizes, opts = {}) {
+    const entry = manifestEntry(src);
+    const cls = `${opts.className || ""} lqip`.trim();
+    const eager = opts.eager ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"';
+    if (!entry) return `<img class="${cls}" src="${escapeHTML(src)}" alt="${escapeHTML(alt)}" ${eager} onload="this.classList.add('loaded')">`;
+    const set = list => list.map(([w, url]) => `${url} ${w}w`).join(", ");
+    const style = entry.lqip ? ` style="background-image:url(${entry.lqip})"` : "";
+    return `<picture><source type="image/webp" srcset="${set(entry.webp)}" sizes="${sizes}"><img class="${cls}" src="${escapeHTML(entry.src)}" srcset="${set(entry.jpg)}" sizes="${sizes}" width="${entry.width}" height="${entry.height}" alt="${escapeHTML(alt)}" ${eager}${style} onload="this.classList.add('loaded')"></picture>`;
+  }
+
+  function markLoadedImages(root = document) {
+    $$("img.lqip", root).forEach(img => { if (img.complete && img.naturalWidth > 0) img.classList.add("loaded"); });
   }
 
   function galleryFor(product) {
@@ -80,6 +105,7 @@
   }
 
   const GALLERY_LABELS = ["ПЕРЕД", "СПИНА", "ТОВАР", "LOOK 01", "LOOK 02", "LOOK 03", "LOOK 04", "LOOK 05", "LOOK 06", "LOOK 07"];
+  const GALLERY_LABELS_REAL = ["ЛИЦЕВАЯ · РЕАЛЬНОЕ ФОТО", "ОБОРОТ · № ТИРАЖА", "СТУДИЯ", "ПАКЕТ"];
 
   function showGallerySlide(index) {
     const product = state.currentProduct;
@@ -88,14 +114,20 @@
     state.galleryIndex = (index + slides.length) % slides.length;
     const img = $("#sheetImage");
     img.classList.add("swapping");
-    setTimeout(() => { img.src = slides[state.galleryIndex]; img.classList.remove("swapping"); }, 120);
+    setTimeout(() => {
+      const entry = manifestEntry(slides[state.galleryIndex]);
+      if (entry) { img.srcset = entry.jpg.map(([w, url]) => `${url} ${w}w`).join(", "); img.sizes = "(max-width: 680px) 100vw, 50vw"; img.src = entry.src; }
+      else { img.removeAttribute("srcset"); img.src = slides[state.galleryIndex]; }
+      img.classList.remove("swapping");
+    }, 120);
     $("#galleryDots").innerHTML = slides.map((_, i) => `<span class="${i === state.galleryIndex ? "active" : ""}"></span>`).join("");
     const multi = slides.length > 1;
     $("#galleryPrev").classList.toggle("hidden", !multi);
     $("#galleryNext").classList.toggle("hidden", !multi);
     let label = $(".gallery-label", $(".sheet-image"));
     if (!label) { label = document.createElement("span"); label.className = "gallery-label"; $(".sheet-image").appendChild(label); }
-    label.textContent = multi ? (GALLERY_LABELS[state.galleryIndex] || `${state.galleryIndex + 1} / ${slides.length}`) : "";
+    const labels = product.real_photos ? GALLERY_LABELS_REAL : GALLERY_LABELS;
+    label.textContent = multi ? (labels[state.galleryIndex] || `${state.galleryIndex + 1} / ${slides.length}`) : "";
   }
 
   function productById(id) {
@@ -129,6 +161,7 @@
     if (!modal) return;
     modal.classList.remove("hidden");
     document.body.classList.add("modal-open");
+    syncTelegramChrome();
   }
 
   function closeModal(id) {
@@ -136,6 +169,7 @@
     if (!modal) return;
     modal.classList.add("hidden");
     if (!$$('.modal-backdrop:not(.hidden)').length) document.body.classList.remove("modal-open");
+    syncTelegramChrome();
   }
 
   function categoryName(id) {
@@ -164,8 +198,8 @@
   function renderProductCard(product, index) {
     const saved = state.saved.includes(product.id);
     return `<article class="product-card" data-product-id="${escapeHTML(product.id)}" style="--card-index:${index}">
-      <div class="product-image"><img src="${escapeHTML(imageFor(product))}" alt="${escapeHTML(product.name)}" loading="lazy"><span class="product-badge">${escapeHTML(product.badge || "CORE")}</span><button class="product-save ${saved ? "saved" : ""}" data-save-id="${escapeHTML(product.id)}" type="button" aria-label="${saved ? "Удалить из сохраненных" : "Сохранить"}"><span class="icon" data-icon="bookmark"></span></button><span class="product-hover">СМОТРЕТЬ ВЕЩЬ <b>↗</b></span></div>
-      <div class="product-info"><div class="product-topline"><span>${escapeHTML(categoryName(product.category))}</span><span class="product-stock">${escapeHTML(product.stock_label || "В наличии")}</span></div><h3>${escapeHTML(product.name)}</h3><div class="product-bottom"><strong class="product-price">${escapeHTML(product.price)}</strong><span class="product-fit">${escapeHTML(product.fit || "CORE FIT")}</span></div></div>
+      <div class="product-image">${pictureFor(imageFor(product), product.name, "(max-width: 680px) 50vw, (max-width: 900px) 50vw, 33vw", { eager: index < 2 })}<span class="product-badge ${/new/i.test(product.badge || "") ? "new" : ""}">${escapeHTML(product.badge || "CORE")}</span>${product.real_photos ? '<span class="product-real">РЕАЛЬНОЕ ФОТО</span>' : ""}<button class="product-save ${saved ? "saved" : ""}" data-save-id="${escapeHTML(product.id)}" type="button" aria-label="${saved ? "Удалить из сохраненных" : "Сохранить"}"><span class="icon" data-icon="bookmark"></span></button><span class="product-hover">СМОТРЕТЬ ВЕЩЬ <b>↗</b></span></div>
+      <div class="product-info"><div class="product-topline"><span>${escapeHTML(categoryName(product.category))}</span><span class="product-stock">${escapeHTML(product.stock_label || "В наличии")}</span></div><h3>${escapeHTML(product.name)}</h3><div class="product-bottom"><strong class="product-price">${escapeHTML(product.price)}${product.compare_price ? `<s class="compare-price">${escapeHTML(product.compare_price)}</s>` : ""}</strong><span class="product-fit">${escapeHTML(product.fit || "CORE FIT")}</span></div></div>
     </article>`;
   }
 
@@ -176,6 +210,7 @@
     root.innerHTML = products.map(renderProductCard).join("");
     $("#emptyState").classList.toggle("hidden", products.length > 0);
     iconize();
+    markLoadedImages(root);
     updateCounters();
   }
 
@@ -190,7 +225,12 @@
     $("#sheetKicker").textContent = `${categoryName(product.category).toUpperCase()} / ${product.fit || "CORE"}`;
     $("#sheetTitle").textContent = product.name;
     $("#sheetPrice").textContent = product.price;
+    const compare = $("#sheetComparePrice");
+    compare.textContent = product.compare_price || "";
+    compare.classList.toggle("hidden", !product.compare_price);
     $("#sheetDescription").textContent = product.description;
+    renderPersonalization(product);
+    renderBundleHint(product);
     $("#sheetFacts").innerHTML = `<div class="fact-row"><span>Материал</span><span>${escapeHTML(product.material || "Плотный хлопок")}</span></div><div class="fact-row"><span>Посадка</span><span>${escapeHTML(product.fit || "Свободная")}</span></div><div class="fact-row"><span>Статус</span><span>${escapeHTML(product.stock_label || "В наличии")}</span></div>`;
     $("#sizeList").innerHTML = (product.sizes || []).map(size => `<button class="size-button" data-size="${escapeHTML(size)}" type="button">${escapeHTML(size)}</button>`).join("");
     $("#sizeHint").textContent = "Выбери размер, чтобы добавить вещь в заявку.";
@@ -200,6 +240,50 @@
     $("#sheetSave").classList.toggle("saved", saved);
     $("#sheetSave").setAttribute("aria-label", saved ? "Удалить из сохраненных" : "Сохранить");
     iconize();
+  }
+
+  function renderPersonalization(product) {
+    const block = $("#personalizeBlock");
+    const rule = product.personalization;
+    state.note = "";
+    if (!rule) { block.classList.add("hidden"); return; }
+    block.classList.remove("hidden");
+    $("#personalizeLabel").textContent = rule.label || "ПОЖЕЛАНИЕ";
+    $("#personalizeHint").textContent = rule.hint || "";
+    const input = $("#personalizeInput");
+    input.value = "";
+    input.placeholder = rule.placeholder || "";
+    input.classList.remove("invalid");
+    $("#tagPreview").classList.add("hidden");
+  }
+
+  function noteIsValid(product, value) {
+    const rule = product && product.personalization;
+    if (!rule || !value) return true;
+    try { return new RegExp(rule.pattern || ".*").test(value); } catch (_) { return true; }
+  }
+
+  function onPersonalizeInput() {
+    const product = state.currentProduct;
+    if (!product || !product.personalization) return;
+    const input = $("#personalizeInput");
+    const value = input.value.replace(/\s+/g, "").trim();
+    const ok = noteIsValid(product, value);
+    input.classList.toggle("invalid", !ok);
+    state.note = ok ? value : "";
+    const preview = $("#tagPreview");
+    if (ok && value) { $("#tagPreviewNumber").textContent = value.padStart(5, "0"); preview.classList.remove("hidden"); }
+    else preview.classList.add("hidden");
+  }
+
+  function renderBundleHint(product) {
+    const hint = $("#bundleHint");
+    const bundle = state.data.products.find(item => /^set-/.test(item.id) && item.active !== false);
+    const isPart = bundle && product.id !== bundle.id && /sila-i-chest/.test(product.id);
+    if (!isPart) { hint.classList.add("hidden"); hint.onclick = null; return; }
+    hint.innerHTML = `<b>НАБОР</b> ${escapeHTML(bundle.name)} — ${escapeHTML(bundle.price)}${bundle.compare_price ? ` вместо <s>${escapeHTML(bundle.compare_price)}</s>` : ""} ↗`;
+    hint.classList.remove("hidden");
+    hint.onclick = () => openProduct(bundle.id);
   }
 
   function openProduct(id) {
@@ -232,10 +316,15 @@
       $("#sizeHint").classList.add("error");
       return;
     }
-    const key = `${product.id}::${state.selectedSize}`;
+    if (product.personalization && !noteIsValid(product, state.note)) {
+      $("#personalizeInput").classList.add("invalid");
+      return showToast("Проверь номер: только цифры, до 5 знаков.");
+    }
+    const note = state.note || "";
+    const key = `${product.id}::${state.selectedSize}::${note}`;
     const existing = state.cart.find(item => item.key === key);
     if (existing) existing.qty += 1;
-    else state.cart.push({ key, id: product.id, size: state.selectedSize, qty: 1 });
+    else state.cart.push({ key, id: product.id, size: state.selectedSize, qty: 1, note });
     saveJSON("vorozhbitov_cart", state.cart);
     updateCounters();
     closeModal("productModal");
@@ -259,7 +348,7 @@
       $("#checkoutForm").classList.add("hidden");
       return;
     }
-    content.innerHTML = pairs.map(({ item, product }) => `<div class="cart-line" data-cart-key="${escapeHTML(item.key)}"><img class="cart-line-image" src="${escapeHTML(imageFor(product))}" alt="${escapeHTML(product.name)}"><div class="cart-line-name"><strong>${escapeHTML(product.name)}</strong><small>Размер: ${escapeHTML(item.size)} · ${escapeHTML(product.price)}</small><div class="qty-control"><button data-qty="minus" type="button" aria-label="Уменьшить">−</button><span>${item.qty}</span><button data-qty="plus" type="button" aria-label="Увеличить">+</button></div></div><div class="cart-line-end"><strong>${rubles(priceNumber(product.price) * item.qty)}</strong><button class="remove-line" data-remove-key="${escapeHTML(item.key)}" type="button">УДАЛИТЬ</button></div></div>`).join("");
+    content.innerHTML = pairs.map(({ item, product }) => `<div class="cart-line" data-cart-key="${escapeHTML(item.key)}"><img class="cart-line-image" src="${escapeHTML((manifestEntry(imageFor(product)) || { src: imageFor(product) }).src.replace(/(\.jpg)$/, "$1").replace(/-800\.jpg$/, "-480.jpg"))}" alt="${escapeHTML(product.name)}" loading="lazy"><div class="cart-line-name"><strong>${escapeHTML(product.name)}</strong><small>${item.size === "ONE SIZE" ? "" : `Размер: ${escapeHTML(item.size)} · `}${escapeHTML(product.price)}${item.note ? ` · <span class="order-code">№ ${escapeHTML(String(item.note).padStart(5, "0"))}</span>` : ""}</small><div class="qty-control"><button data-qty="minus" type="button" aria-label="Уменьшить">−</button><span>${item.qty}</span><button data-qty="plus" type="button" aria-label="Увеличить">+</button></div></div><div class="cart-line-end"><strong>${rubles(priceNumber(product.price) * item.qty)}</strong><button class="remove-line" data-remove-key="${escapeHTML(item.key)}" type="button">УДАЛИТЬ</button></div></div>`).join("");
     $("#cartTotal").textContent = rubles(cartTotal());
     $("#checkoutForm").classList.remove("hidden");
   }
@@ -304,7 +393,15 @@
     renderProducts();
   }
 
-  function submitOrder() {
+  function setSubmitState(text, isError = false) {
+    const node = $("#submitState");
+    if (!node) return;
+    node.textContent = text || "";
+    node.classList.toggle("error", Boolean(isError));
+  }
+
+  async function submitOrder() {
+    if (state.submitting) return;
     const pairs = cartItems();
     const name = $("#checkoutName").value.trim();
     const phone = $("#checkoutPhone").value.trim();
@@ -321,18 +418,68 @@
       request_id: `web-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       customer: { name, phone, city },
       consent: true,
-      items: pairs.map(({ item, product }) => ({ product_id: product.id, size: item.size, quantity: item.qty }))
+      items: pairs.map(({ item, product }) => ({ product_id: product.id, size: item.size, quantity: item.qty, note: item.note || "" }))
     };
-    const serialized = JSON.stringify(payload);
-    state.cart = [];
-    saveJSON("vorozhbitov_cart", state.cart);
-    updateCounters();
-    closeModal("cartModal");
-    if (tg && typeof tg.sendData === "function") {
-      try { tg.sendData(serialized); } catch (_) { /* fallback toast still confirms the local handoff */ }
+    const button = $("#submitOrder");
+    state.submitting = true;
+    button.disabled = true;
+    setSubmitState("Отправляем в бот…");
+
+    const finishOk = detail => {
+      state.cart = [];
+      saveJSON("vorozhbitov_cart", state.cart);
+      updateCounters();
+      closeModal("cartModal");
+      $("#successDetail").textContent = detail;
+      $("#successToast").classList.remove("hidden");
+      if (tg && tg.HapticFeedback && typeof tg.HapticFeedback.notificationOccurred === "function") tg.HapticFeedback.notificationOccurred("success");
+      setSubmitState("");
+    };
+    const finishFail = message => {
+      setSubmitState(message, true);
+      showToast(message);
+      if (tg && tg.HapticFeedback && typeof tg.HapticFeedback.notificationOccurred === "function") tg.HapticFeedback.notificationOccurred("error");
+    };
+
+    try {
+      const initData = tg && tg.initData ? tg.initData : "";
+      // 1) Основной канал — HTTP в бот (работает из inline-кнопки, меню и по ссылке, где sendData молчит).
+      if (initData && state.data.orders_endpoint !== false) {
+        const response = await fetch("/api/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": initData },
+          body: JSON.stringify({ order: payload })
+        });
+        let result = null;
+        try { result = await response.json(); } catch (_) { result = null; }
+        if (response.ok && result && result.ok) {
+          const codes = (result.orders || []).map(order => `№ ${order.code}`).join(", ");
+          finishOk(codes ? `Заявка ${codes}. Бот уже прислал подтверждение, менеджер свяжется с тобой.` : "Бот прислал подтверждение. Менеджер свяжется с тобой.");
+          return;
+        }
+        if (response.status === 401 || response.status === 503) throw new Error("fallback");
+        finishFail((result && result.error) || "Не получилось отправить заявку. Попробуй ещё раз.");
+        return;
+      }
+      throw new Error("fallback");
+    } catch (_) {
+      // 2) Запасной канал — sendData: доставляется только если витрина открыта с reply-кнопки.
+      if (tg && typeof tg.sendData === "function" && tg.initData) {
+        try {
+          tg.sendData(JSON.stringify(payload));
+          finishOk("Заявка передана в бот. Если бот не ответил в течение минуты — напиши ему «/start» и отправь заявку ещё раз.");
+          return;
+        } catch (err) { /* ниже */ }
+      }
+      if (!tg || !tg.initData) {
+        finishOk("Демо-режим: вне Telegram заявка никуда не отправляется. Открой витрину из бота.");
+        return;
+      }
+      finishFail("Нет связи с ботом. Проверь интернет и попробуй ещё раз.");
+    } finally {
+      state.submitting = false;
+      button.disabled = false;
     }
-    $("#successToast").classList.remove("hidden");
-    showToast(tg ? "Заявка передана в бот." : "Демо-заявка создана — подключи Telegram для отправки менеджеру.");
   }
 
   function openChannel() {
@@ -359,13 +506,69 @@
       tg.expand();
       if (typeof tg.setHeaderColor === "function") tg.setHeaderColor("#0b0b0d");
       if (typeof tg.setBackgroundColor === "function") tg.setBackgroundColor("#0b0b0d");
+      if (typeof tg.setBottomBarColor === "function") tg.setBottomBarColor("#0b0b0d");
+      if (typeof tg.disableVerticalSwipes === "function") tg.disableVerticalSwipes();
+      if (typeof tg.isVersionAtLeast === "function" && tg.isVersionAtLeast("6.1") && typeof tg.enableClosingConfirmation === "function") {
+        // спросить перед закрытием, если в заявке есть вещи
+        if (state.cart.length) tg.enableClosingConfirmation();
+      }
+      document.body.classList.toggle("tg-light", tg.colorScheme === "light");
+      if (typeof tg.onEvent === "function") {
+        tg.onEvent("themeChanged", () => document.body.classList.toggle("tg-light", tg.colorScheme === "light"));
+        tg.onEvent("backButtonClicked", () => {
+          const open = $$(".modal-backdrop:not(.hidden)");
+          if (open.length) { open.forEach(modal => { closeModal(modal.id); if (modal.id === "teaserModal") closeTeaser(); }); }
+          syncTelegramChrome();
+        });
+        tg.onEvent("mainButtonClicked", () => {
+          if (!$("#productModal").classList.contains("hidden")) return addToCart();
+          if (!$("#cartModal").classList.contains("hidden")) return submitOrder();
+        });
+      }
       if (tg.MainButton) tg.MainButton.hide();
     } catch (_) { /* browser preview */ }
   }
 
-  async function loadCatalog() {
+  // Нативные кнопки Telegram: BackButton закрывает шторки, MainButton дублирует главное действие.
+  function syncTelegramChrome() {
+    if (!tg) return;
     try {
-      const response = await fetch("/api/catalog", { headers: { Accept: "application/json" } });
+      const productOpen = !$("#productModal").classList.contains("hidden");
+      const cartOpen = !$("#cartModal").classList.contains("hidden");
+      const anyOpen = $$(".modal-backdrop:not(.hidden)").length > 0;
+      if (tg.BackButton) { if (anyOpen) tg.BackButton.show(); else tg.BackButton.hide(); }
+      if (tg.MainButton) {
+        if (productOpen) {
+          tg.MainButton.setParams({ text: state.selectedSize ? "ДОБАВИТЬ В ЗАЯВКУ" : "ВЫБЕРИ РАЗМЕР", color: "#ff3e26", text_color: "#0b0b0d", is_active: Boolean(state.selectedSize), is_visible: true });
+        } else if (cartOpen && cartItems().length) {
+          tg.MainButton.setParams({ text: state.submitting ? "ОТПРАВЛЯЕМ…" : `ОТПРАВИТЬ ЗАЯВКУ · ${rubles(cartTotal())}`, color: "#ff3e26", text_color: "#0b0b0d", is_active: !state.submitting, is_visible: true });
+        } else tg.MainButton.hide();
+        document.body.classList.toggle("tg-mainbutton", Boolean(tg.MainButton.isVisible));
+      }
+      if (typeof tg.enableClosingConfirmation === "function" && typeof tg.disableClosingConfirmation === "function") {
+        if (state.cart.length) tg.enableClosingConfirmation(); else tg.disableClosingConfirmation();
+      }
+    } catch (_) { /* старые клиенты */ }
+  }
+
+  function renderSkeleton(count = 4) {
+    $("#productGrid").innerHTML = Array.from({ length: count }, (_, index) => `<article class="product-card skeleton" style="--card-index:${index}"><div class="product-image"></div><div class="product-info"><div class="product-topline"><span>·</span></div><h3>·</h3><div class="product-bottom"><strong class="product-price">·</strong></div></div></article>`).join("");
+  }
+
+  async function loadManifest(url) {
+    try {
+      const response = await fetch(url || "assets/img/manifest.json", { headers: { Accept: "application/json" } });
+      if (response.ok) state.manifest = await response.json();
+    } catch (_) { state.manifest = {}; }
+  }
+
+  async function loadCatalog() {
+    renderSkeleton();
+    try {
+      const [response] = await Promise.all([
+        fetch("/api/catalog", { headers: { Accept: "application/json" } }),
+        loadManifest()
+      ]);
       if (!response.ok) throw new Error("catalog unavailable");
       const remote = await response.json();
       if (Array.isArray(remote.products) && Array.isArray(remote.categories)) {
@@ -486,6 +689,13 @@
       if (card) openProduct(card.dataset.productId);
     });
 
+    $("#personalizeInput").addEventListener("input", onPersonalizeInput);
+    $("#bundleHint").addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); $("#bundleHint").click(); } });
+    const lookbookReal = $("#lookbookReal");
+    if (lookbookReal) {
+      lookbookReal.addEventListener("click", () => openProduct("tag-sila-i-chest-001"));
+      lookbookReal.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openProduct("tag-sila-i-chest-001"); } });
+    }
     $("#sizeList").addEventListener("click", event => {
       const button = event.target.closest("[data-size]");
       if (!button) return;
@@ -493,6 +703,7 @@
       $$(".size-button", $("#sizeList")).forEach(node => node.classList.toggle("selected", node === button));
       $("#sizeHint").textContent = `Размер ${state.selectedSize} выбран.`;
       $("#sizeHint").classList.remove("error");
+      syncTelegramChrome();
     });
 
     $("#sheetSave").addEventListener("click", () => { if (state.currentProduct) toggleSaved(state.currentProduct.id); });
@@ -561,8 +772,10 @@
     document.addEventListener("keydown", event => { if (event.key === "Escape") $$(".modal-backdrop:not(.hidden)").forEach(modal => { closeModal(modal.id); if (modal.id === "teaserModal") closeTeaser(); }); });
 
     const sections = ["home", "catalog", "lookbook", "join"];
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) $$(".bottom-link").forEach(link => link.classList.toggle("active", link.dataset.scroll === entry.target.id)); }), { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
-    sections.forEach(id => { const element = document.getElementById(id); if (element) observer.observe(element); });
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) $$(".bottom-link").forEach(link => link.classList.toggle("active", link.dataset.scroll === entry.target.id)); }), { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+      sections.forEach(id => { const element = document.getElementById(id); if (element) observer.observe(element); });
+    }
   }
 
   iconize();
@@ -572,5 +785,6 @@
   setupStoryButton();
   updateCounters();
   loadCatalog();
+  markLoadedImages();
   window.VorozhbitovShop = { state, openProduct, openCart };
 })();

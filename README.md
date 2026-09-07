@@ -137,7 +137,7 @@ data/catalog.json
   "sizes": ["S", "M", "L", "XL"],
   "description": "...",
   "photo_url": "",
-  "image": "assets/base-tee.jpg",
+  "image": "assets/img/base-tee.jpg",
   "badge": "DROP 001",
   "material": "100% хлопок · 240 г/м²",
   "fit": "Свободный крой",
@@ -176,6 +176,44 @@ python3 -m unittest -v
 python3 smoke_test.py
 ```
 
+## Фото и картинки
+
+Все изображения витрины лежат в `miniapp/assets/img/` и собираются скриптом `tools/optimize_images.py`
+(OpenCV + Pillow, без внешних сервисов):
+
+```
+python3 tools/optimize_images.py --name tag-front --src ../photos/tag-front.png \
+    --crop 176,66,504,600 --denoise 5 --wb 0.7 --contrast 1.05 --saturation 0.92
+```
+
+- на выходе `<name>-{480,800,1080}.webp` + `.jpg`, `<name>.jpg` (=800, для `sendPhoto` в боте) и запись в
+  `manifest.json` (размеры, srcset, LQIP-плейсхолдер 24 px в base64);
+- `--isolate x,y,w,h` вырезает предмет (GrabCut) и ставит на студийный фон витрины `#0b0b0d` с тенью —
+  так сделан `tag-front-studio`;
+- в `catalog.json` картинка указывается одним путём (`assets/img/tag-front.jpg`); `app.js` сам подставит
+  `<picture>` с WebP/JPEG и `sizes` по манифесту. Если файла нет в манифесте — покажет как обычный `<img>`;
+- `"real_photos": true` у товара включает метку «РЕАЛЬНОЕ ФОТО» на карточке и подписи галереи «Лицевая / Оборот».
+
+Реальные фото жетона и пакета — кадры с производства (скриншоты из видео 700–1000 px): их вытянули по
+шуму/балансу белого и не увеличивали больше чем в 2.2 раза. Для финальной витрины нужна предметная съёмка
+жетона на нейтральном фоне 2000 px+ — скрипт тот же.
+
+## Заявка из Mini App: `POST /api/order`
+
+`WebApp.sendData` доставляет данные боту только если приложение открыто **с reply-клавиатуры**. Из inline-кнопки,
+меню бота (`/setmenubutton`) и по прямой ссылке заявка молча теряется. Поэтому витрина шлёт заявку HTTP-запросом
+на тот же origin:
+
+- заголовок `X-Telegram-Init-Data` = `Telegram.WebApp.initData`; сервер проверяет подпись HMAC-SHA256 секретом из
+  токена бота (`verify_init_data`), срок `auth_date` — 24 часа; без подписи — `401`, без токена (превью) — `503`;
+- тело `{"order": {...}}` в том же формате, что раньше уходил через `sendData` (`type`, `request_id`, `customer`,
+  `consent`, `items[{product_id,size,quantity,note}]`); цены и названия берутся из серверного каталога;
+- `note` — персонализация (номер жетона): валидируется по `personalization.pattern` товара, пишется в события
+  `order_note` и в уведомление менеджеру;
+- ответ `{"ok": true, "orders": [{"id","code",...}]}` → витрина показывает номер заявки; `sendData` остаётся
+  запасным каналом, если эндпоинт недоступен;
+- лимит тела 32 КБ; `request_id` делает повтор идемпотентным (`duplicate: true`).
+
 ## Видео дропа (hero-loop, тизер, сторис)
 
 Подробно — в `MINIAPP-VIDEO.md`. Коротко:
@@ -201,6 +239,7 @@ python3 smoke_test.py
 - прогнать тестовую заявку на отдельном боте;
 - не использовать чужие изображения людей и реальные фото без разрешения.
 
+- Mini App должен открываться с того же HTTPS-домена, где живёт бот (`/api/order` — same-origin, CORS не настроен).
 - Видео: за HTTPS-прокси отдавайте `/assets/video/` напрямую (nginx `location`/Caddy `file_server`) — Range и кеш из
   коробки, поток бота не занят раздачей; заполните `media.teaser_story_url` публичным URL, иначе «В сторис» сработает
   только когда приложение уже открыто с публичного домена.

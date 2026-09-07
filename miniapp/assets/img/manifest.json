@@ -1,0 +1,484 @@
+{
+ "back-boxing": {
+  "aspect": 1.2982,
+  "height": 912,
+  "jpg": [
+   [
+    480,
+    "assets/img/back-boxing-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/back-boxing-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/back-boxing-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAQBQCdASoYABIAPu1srFEppaQiqAqpMB2JZwDKAA6/Fn65DnL1dwiTr7FvgsnHlmBYAP7w3wF9nnRioJz0O9eDOgzGqJbHrkxj5YOWQrRGd/l6BhmEfMantncp27BzVtxn5OgMruaAcjlaeDJ19s9x79+AOh8U++RCN6V3PXVEAM0Y2h0pceq5SM2AqOIYT94mzwBgYAA=",
+  "src": "assets/img/back-boxing.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/back-boxing-480.webp"
+   ],
+   [
+    800,
+    "assets/img/back-boxing-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/back-boxing-1080.webp"
+   ]
+  ],
+  "width": 1184
+ },
+ "bag-desk": {
+  "aspect": 0.84,
+  "height": 1000,
+  "jpg": [
+   [
+    480,
+    "assets/img/bag-desk-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/bag-desk-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/bag-desk-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAADQBQCdASoYAB0APu1krVAppSQisBgIATAdiWUAy6QQ8C1mU7IjGAq8rMJ9endioeXPaAV/nqmAAP6bnc7Iko9fmbG/mMKi6sa8/ZueF2YJGTZQ2Q3l0TjkijyNukZzdhyLK2ICmndOr2W1KhxV25Q0pCpIXNR4B+TqKbtjfgnpM02TY1r5VtMsRefAElt4htsJaDUEtF5OgnyXblIG6tj6rtPgyEQ/iJHfRHHUILWVlNLJjaH9Fol3teDsAAAA",
+  "src": "assets/img/bag-desk.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/bag-desk-480.webp"
+   ],
+   [
+    800,
+    "assets/img/bag-desk-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/bag-desk-1080.webp"
+   ]
+  ],
+  "width": 840
+ },
+ "base-tee": {
+  "aspect": 1.0,
+  "height": 1024,
+  "jpg": [
+   [
+    480,
+    "assets/img/base-tee-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/base-tee-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/base-tee-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABwBQCdASoYABgAPu1oqU+ppiOiKA1RMB2JZwDH5A9klx/9V6GZT5e17FrhBAHR+8Xpo2gAAP6783wApSY70bLxrlCOTmyDh0rNBS4/rrAci5eoarpv0ARzPMkc4JE6pAb4rbK0aO3dWud1wQoPXlv3nlomSq5yTUswWbLL+b1bvOlACxepjM64ghIqYeAA",
+  "src": "assets/img/base-tee.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/base-tee-480.webp"
+   ],
+   [
+    800,
+    "assets/img/base-tee-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/base-tee-1080.webp"
+   ]
+  ],
+  "width": 1024
+ },
+ "city-cargo": {
+  "aspect": 0.8056,
+  "height": 1152,
+  "jpg": [
+   [
+    480,
+    "assets/img/city-cargo-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/city-cargo-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/city-cargo-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAADwBACdASoYAB4APu1qsFCppaSiqAqpMB2JZwAAIGyavymaR5cWQefFj+avW4GUI4AA/pcZ2Pnh5KTSFdthKOK4GykOhi64EwFK65fid306teSbiODjABQHh0VK9I7oFVJByLvVEVHzi35LHCgZHCjRpedSCeIboo5g/oha3TT/AAAA",
+  "src": "assets/img/city-cargo.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/city-cargo-480.webp"
+   ],
+   [
+    800,
+    "assets/img/city-cargo-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/city-cargo-1080.webp"
+   ]
+  ],
+  "width": 928
+ },
+ "crew": {
+  "aspect": 1.1552,
+  "height": 960,
+  "jpg": [
+   [
+    480,
+    "assets/img/crew-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/crew-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/crew-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRuwAAABXRUJQVlA4IOAAAABQBQCdASoYABUAPu1ur1IppiQiqAgBMB2JZACdMoSCwHPz+AKrXivD6N+saHu+MWUYpmAA/uwM9UPfG7uzxUQedeK79tTcZTM+CUaN90KIqZsGS0gmsE9PvtEXpAo3nXLxnTS54PsuidYuMT6DyM6CDd/IxgfyzcvDnaHyngHaL1jQezcFWqBOzQrlHFF9GyGO7X4/ShWeY3rm0vB5Ilhx03LcNCt/vNJnRKbXQx15ptTt6vTiNsSTFoOSbqrI8MGpPxUitWTEtzqN4LDY8B4FZsbGv+kgUGkfYtP3QDAAAA==",
+  "src": "assets/img/crew.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/crew-480.webp"
+   ],
+   [
+    800,
+    "assets/img/crew-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/crew-1080.webp"
+   ]
+  ],
+  "width": 1109
+ },
+ "flatlay": {
+  "aspect": 1.0,
+  "height": 1024,
+  "jpg": [
+   [
+    480,
+    "assets/img/flatlay-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/flatlay-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/flatlay-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAADwBACdASoYABgAPu1oqk+ppiOiKA1RMB2JZwAAJoN0NuKj7td64HKYYojpuzo96AAA/o0yhWbOuC2ZDdDPFsDFz1ZUWChLVkV5rT7Q0HCJURW4I+MvJyjhlzytsocfJjHyTipRyvDIIxKOu2Z9HpfJQNg/z+peK8gfRJswuFeX1CHPgY4/dVS/IkCzOGrYK5/YIfH4AAA=",
+  "src": "assets/img/flatlay.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/flatlay-480.webp"
+   ],
+   [
+    800,
+    "assets/img/flatlay-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/flatlay-1080.webp"
+   ]
+  ],
+  "width": 1024
+ },
+ "front-night": {
+  "aspect": 1.1552,
+  "height": 960,
+  "jpg": [
+   [
+    480,
+    "assets/img/front-night-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/front-night-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/front-night-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRuQAAABXRUJQVlA4INgAAABwBQCdASoYABUAPu1srFEppaQiqAqpMB2JQBUipAagFUOneU6XnUb26c1o+jMpj/DzxIsAAP68geSYOvIopWW5sb/679avVw1nvyyfNJHWqa3UjjJZf5q1ZWX94Vgeof2JBa64BF4oExv3tm10plzHoitW7mZZHirQD4k+ihlItddrMG1oVOulzX1Pv9flKBUx0iOilU4TM30sq576cpmv60lfYij5J2J0iHZsiOGV6G4s1aYYlIJuEsH/cleQunyBTAgjQ2CO/FDaNb/4d4IeR7rY6FMAAAA=",
+  "src": "assets/img/front-night.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/front-night-480.webp"
+   ],
+   [
+    800,
+    "assets/img/front-night-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/front-night-1080.webp"
+   ]
+  ],
+  "width": 1109
+ },
+ "gym": {
+  "aspect": 1.1552,
+  "height": 960,
+  "jpg": [
+   [
+    480,
+    "assets/img/gym-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/gym-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/gym-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRsQAAABXRUJQVlA4ILgAAACQBQCdASoYABUAPu1qqVAppiOiqA1RMB2JYwDE2YxiXta7xCdCwbyUdP7aUMDxjblHzvRbyAD+9DLYLG5Uf67GYlqB14DPNqbnu9HYhNZ0XxH2CXN7EwDsDbvynwARrUI3dAJDslZThgucD7eMFJL0+I6QZDuAN/GKzVDRFJZoQZ7xjnUWT5wHuFUn/YgMTewpu0xABjCGXHBjMzjzgaOKD38neU5Rx/KaRj8wHmGSMccEFs69yAAA",
+  "src": "assets/img/gym.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/gym-480.webp"
+   ],
+   [
+    800,
+    "assets/img/gym-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/gym-1080.webp"
+   ]
+  ],
+  "width": 1109
+ },
+ "heavy-hoodie": {
+  "aspect": 0.8056,
+  "height": 1152,
+  "jpg": [
+   [
+    480,
+    "assets/img/heavy-hoodie-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/heavy-hoodie-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/heavy-hoodie-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQBACdASoYAB4APu1ur1KppiQiqAgBMB2JZwDKAA9oWVqclBMi6DWc7veM7NwNgAD+8N+t0IZ1jRCsK+/lceF/RozOgFO8cF2SEdGe9fdlqlFGQ8fi+QnIV7UmH6RUMfSi0Cz1lCiCDUbqGG9M/wAA",
+  "src": "assets/img/heavy-hoodie.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/heavy-hoodie-480.webp"
+   ],
+   [
+    800,
+    "assets/img/heavy-hoodie-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/heavy-hoodie-1080.webp"
+   ]
+  ],
+  "width": 928
+ },
+ "logo-cap": {
+  "aspect": 1.0,
+  "height": 1024,
+  "jpg": [
+   [
+    480,
+    "assets/img/logo-cap-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/logo-cap-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/logo-cap-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAQBQCdASoYABgAPu1irFAppSQisBgIATAdiWUAyFwPSDM0IZVwRePAh0I8sOradDv4AP6/f1OjJNikDoKxCvbY1LAddjo+icv3nh8MQzs2nBdXg2wVJ6LGKwxrrUrqMD4vMSCftSpe+C1sLSPfN3XZf9E7OYCcmadRBTFPtK7fZQHohdYMAAAA",
+  "src": "assets/img/logo-cap.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/logo-cap-480.webp"
+   ],
+   [
+    800,
+    "assets/img/logo-cap-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/logo-cap-1080.webp"
+   ]
+  ],
+  "width": 1024
+ },
+ "roof": {
+  "aspect": 1.1552,
+  "height": 960,
+  "jpg": [
+   [
+    480,
+    "assets/img/roof-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/roof-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/roof-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACQBACdASoYABUAPu1kq06ppaQiKA1RMB2JYgCdMvbAx4dmaJj54mIgWD8aOwgA/TDKG0kBNSoI6HCy4+GSVKYIVpi3H/E2hGmZkgehvQSLa8Sdeplo606857dZRy6t3ba7iXYwJJiAfqIZPN1uGu88MCYBF+yH5k3Fzd7RD09GKEUPKerMudDKWvtUeRXxocK9pJYVdr/EAA==",
+  "src": "assets/img/roof.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/roof-480.webp"
+   ],
+   [
+    800,
+    "assets/img/roof-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/roof-1080.webp"
+   ]
+  ],
+  "width": 1109
+ },
+ "tag-back": {
+  "aspect": 0.8391,
+  "height": 640,
+  "jpg": [
+   [
+    480,
+    "assets/img/tag-back-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/tag-back-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/tag-back-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRuwAAABXRUJQVlA4IOAAAACwBQCdASoYAB0APu1sqlEppaOiqAqpMB2JZACdAAu8o52FHSSwoqq8fmJNa4P6n5g7vg5ycAAA/bcGq8vSOVIs89RxmwepR2VdZy5+SKX+fsOmRCNomRjMuy/N367fMJ/LmbJOiFX4wZywayqzrTonR6eYJ0E9dut58W26hm6iLyCmYhp5Z3EiqBEm/mmoSATRibMcK2fWGSC+VxP6cRR0GnWJENERxXZKI3eRVOlhN3QDrbmy+R6b1dzwWlU6Kv6SdR02/Ic7pWewEohTlIIVFUAvsGowj790Is1dSjyAAA==",
+  "src": "assets/img/tag-back.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/tag-back-480.webp"
+   ],
+   [
+    800,
+    "assets/img/tag-back-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/tag-back-1080.webp"
+   ]
+  ],
+  "width": 537
+ },
+ "tag-front": {
+  "aspect": 0.84,
+  "height": 600,
+  "jpg": [
+   [
+    480,
+    "assets/img/tag-front-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/tag-front-800.jpg"
+   ],
+   [
+    1080,
+    "assets/img/tag-front-1080.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRvoAAABXRUJQVlA4IO4AAAAQBgCdASoYAB0APu1ur1IppiQiqAgBMB2JZACdMoCpAAttgm3VEe0gX584u6OI2pJiQi2exfNvpEAA/pgNnasGwjSYh3ee/iw61fkoBmYKLYPDXeEXI5xooyf8gxpUdLd+4eW2qN02HcXfmpwiMoS+uVTGO3K02b397LbWUVbS/19AkXJPia2+DegD4wwwk6FCTNhbYi/jxW/oFjpK6wEAeQDdUm2et5oErj4UlyI1ouIaUaFSm0SDT6MpfN6nt83+YRkIre9WtuWOlf0aioZQpdlSrvraPd/VtvoXyccFupApo8b9DXY+Yb202kAA",
+  "src": "assets/img/tag-front.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/tag-front-480.webp"
+   ],
+   [
+    800,
+    "assets/img/tag-front-800.webp"
+   ],
+   [
+    1080,
+    "assets/img/tag-front-1080.webp"
+   ]
+  ],
+  "width": 504
+ },
+ "tag-front-studio": {
+  "aspect": 0.8399,
+  "height": 531,
+  "jpg": [
+   [
+    480,
+    "assets/img/tag-front-studio-480.jpg"
+   ],
+   [
+    800,
+    "assets/img/tag-front-studio-800.jpg"
+   ]
+  ],
+  "lqip": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAADwBACdASoYAB0APu1mq06ppaQiKA1RMB2JYwC7ABDexs43Vicuc+nb7LAa8JojgAAA/vKjsHlidK8UbVleJQZDAjGygLZpjDYuimYcSurX97kB8ZhjH5hkCeM5RaxCedwNhqILrFs9M93zWkDPDkLUMbgzQ5ZNI+i06RuMVEkCFe5sNOCpT3FZMNw7/ocrwEWwcZev/g9qtPBI8c96CfEfgAA=",
+  "src": "assets/img/tag-front-studio.jpg",
+  "webp": [
+   [
+    480,
+    "assets/img/tag-front-studio-480.webp"
+   ],
+   [
+    800,
+    "assets/img/tag-front-studio-800.webp"
+   ]
+  ],
+  "width": 446
+ }
+}

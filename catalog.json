@@ -2,7 +2,8 @@
   "brand": {
     "name": "ВОРОЖБИТОВ",
     "descriptor": "городская форма / лимитированные дропы",
-    "drop": "DROP 001"
+    "drop": "DROP 001",
+    "tagline": "ПУТЬ, ДОСТОЙНЫЙ ВОИНА"
   },
   "categories": [
     {
@@ -41,13 +42,15 @@
       ],
       "description": "Чёрная футболка с уставной надписью «СИЛА И ЧЕСТЬ» на груди и мечом по позвоночнику. Первый тираж — один раз и без повторов.",
       "photo_url": "",
-      "image": "assets/sila-i-chest/front-night.jpg",
+      "image": "assets/img/front-night.jpg",
       "images": [
-        "assets/sila-i-chest/front-night.jpg",
-        "assets/sila-i-chest/back-boxing.jpg",
-        "assets/sila-i-chest/flatlay.jpg",
-        "assets/sila-i-chest/crew.jpg",
-        "assets/sila-i-chest/gym.jpg"
+        "assets/img/front-night.jpg",
+        "assets/img/back-boxing.jpg",
+        "assets/img/flatlay.jpg",
+        "assets/img/bag-desk.jpg",
+        "assets/img/gym.jpg",
+        "assets/img/crew.jpg",
+        "assets/img/roof.jpg"
       ],
       "badge": "DROP 001",
       "material": "100% хлопок · 240 г/м²",
@@ -56,11 +59,93 @@
         "Принт спереди: «СИЛА И ЧЕСТЬ», уставной шрифт",
         "Принт сзади: меч по позвоночнику, монограмма ВВ у ворота",
         "Плотная шелкография, не трескается",
-        "Усиленная горловина"
+        "Усиленная горловина",
+        "Фирменный зип-пакет «ПУТЬ, ДОСТОЙНЫЙ ВОИНА»"
       ],
       "stock_label": "Первый тираж",
       "active": true,
-      "teaser": true
+      "teaser": true,
+      "bundle_hint": "В комплекте с жетоном — набор «СИЛА И ЧЕСТЬ»"
+    },
+    {
+      "id": "tag-sila-i-chest-001",
+      "category": "drop",
+      "active": true,
+      "name": "СИЛА И ЧЕСТЬ / ЖЕТОН",
+      "price": "1 900 ₽",
+      "sizes": [
+        "ONE SIZE"
+      ],
+      "badge": "DROP 001 · NEW",
+      "fit": "Нумерованный",
+      "stock_label": "Тираж 100 шт.",
+      "material": "Нержавеющая сталь · лазерная гравировка",
+      "description": "Армейский жетон из нержавеющей стали с лазерной гравировкой. Лицевая сторона — монограмма ВВ с мечом, оборот — «СИЛА И ЧЕСТЬ» и личный номер тиража. Каждый жетон уникален: номер не повторяется.",
+      "details": [
+        "Сталь AISI 304, 50×29 мм, 2 мм",
+        "Лазерная гравировка с двух сторон",
+        "Личный номер № 00001–00100",
+        "Шариковая цепочка 60 см в комплекте",
+        "Фирменный зип-пакет"
+      ],
+      "image": "assets/img/tag-front.jpg",
+      "images": [
+        "assets/img/tag-front.jpg",
+        "assets/img/tag-back.jpg",
+        "assets/img/tag-front-studio.jpg",
+        "assets/img/bag-desk.jpg"
+      ],
+      "photo_url": "",
+      "real_photos": true,
+      "personalization": {
+        "label": "НОМЕР ЖЕТОНА",
+        "hint": "Свободные номера подтвердит менеджер. Хочешь конкретный — напиши его здесь.",
+        "placeholder": "например, 00063",
+        "pattern": "^[0-9]{1,5}$",
+        "optional": true
+      },
+      "teaser": false
+    },
+    {
+      "id": "set-sila-i-chest-001",
+      "category": "drop",
+      "active": true,
+      "name": "СИЛА И ЧЕСТЬ / НАБОР",
+      "price": "6 300 ₽",
+      "compare_price": "6 800 ₽",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "badge": "DROP 001 · SET",
+      "fit": "Футболка + жетон",
+      "stock_label": "Пока есть номера",
+      "material": "Хлопок 240 г/м² + сталь",
+      "description": "Футболка «СИЛА И ЧЕСТЬ» и нумерованный стальной жетон в одном пакете. Размер — для футболки, номер жетона подберёт менеджер или укажи желаемый.",
+      "details": [
+        "Футболка + жетон с номером",
+        "Выгода 500 ₽ против покупки по отдельности",
+        "Фирменный зип-пакет «ПУТЬ, ДОСТОЙНЫЙ ВОИНА»"
+      ],
+      "image": "assets/img/bag-desk.jpg",
+      "images": [
+        "assets/img/bag-desk.jpg",
+        "assets/img/front-night.jpg",
+        "assets/img/tag-front.jpg",
+        "assets/img/tag-back.jpg"
+      ],
+      "photo_url": "",
+      "real_photos": true,
+      "personalization": {
+        "label": "НОМЕР ЖЕТОНА",
+        "hint": "Необязательно. Свободные номера подтвердит менеджер.",
+        "placeholder": "например, 00063",
+        "pattern": "^[0-9]{1,5}$",
+        "optional": true
+      }
     },
     {
       "id": "drop-tee-001",
@@ -75,7 +160,7 @@
       ],
       "description": "Плотный хлопок, свободный крой, минимальный сигнал на груди. Первый тираж — один раз и без повторов.",
       "photo_url": "",
-      "image": "assets/base-tee.jpg",
+      "image": "assets/img/base-tee.jpg",
       "badge": "DROP 001",
       "material": "100% хлопок · 240 г/м²",
       "fit": "Свободный крой",
@@ -99,7 +184,7 @@
       ],
       "description": "Тяжёлое полотно, объёмный силуэт, двойная строчка. Увидел — забирай: партия ограничена.",
       "photo_url": "",
-      "image": "assets/hero-drop.jpg",
+      "image": "assets/img/front-night.jpg",
       "badge": "LIMITED",
       "material": "100% хлопок · 400 г/м²",
       "fit": "Объемный крой",
@@ -124,7 +209,7 @@
       ],
       "description": "400 г/м². Держит форму и темп города. Никакой лишней графики — только посадка и вес.",
       "photo_url": "",
-      "image": "assets/heavy-hoodie.jpg",
+      "image": "assets/img/heavy-hoodie.jpg",
       "badge": "CORE",
       "material": "100% хлопок · 400 г/м²",
       "fit": "Свободный крой",
@@ -149,7 +234,7 @@
       ],
       "description": "База на каждый день: плотная ткань, спокойная форма, вещь, которую не хочется снимать.",
       "photo_url": "",
-      "image": "assets/base-tee.jpg",
+      "image": "assets/img/base-tee.jpg",
       "badge": "EVERYDAY",
       "material": "100% хлопок · 240 г/м²",
       "fit": "Boxy fit",
@@ -173,7 +258,7 @@
       ],
       "description": "Свободные карго с регулируемой посадкой и усиленными карманами. Город не бережёт — эти выдержат.",
       "photo_url": "",
-      "image": "assets/city-cargo.jpg",
+      "image": "assets/img/city-cargo.jpg",
       "badge": "UTILITY",
       "material": "Плотный хлопок · ripstop",
       "fit": "Relaxed fit",
@@ -195,7 +280,7 @@
       ],
       "description": "Плотная шестиклинка с маленькой красной меткой. Никаких громких логотипов — свой считывает.",
       "photo_url": "",
-      "image": "assets/logo-cap.jpg",
+      "image": "assets/img/logo-cap.jpg",
       "badge": "SIGNAL",
       "material": "100% хлопок",
       "fit": "Регулируемый размер",
@@ -210,29 +295,34 @@
   ],
   "lookbook": [
     {
-      "image": "assets/sila-i-chest/crew.jpg",
+      "image": "assets/img/tag-back.jpg",
+      "photo_url": "",
+      "caption": "ЖЕТОН № 00063 / РЕАЛЬНОЕ ФОТО"
+    },
+    {
+      "image": "assets/img/bag-desk.jpg",
+      "photo_url": "",
+      "caption": "ПУТЬ, ДОСТОЙНЫЙ ВОИНА / ПАКЕТ"
+    },
+    {
+      "image": "assets/img/crew.jpg",
       "photo_url": "",
       "caption": "СИЛА И ЧЕСТЬ / СВОИ"
     },
     {
-      "image": "assets/sila-i-chest/roof.jpg",
+      "image": "assets/img/roof.jpg",
       "photo_url": "",
       "caption": "СИЛА И ЧЕСТЬ / ГОРОД"
     },
     {
-      "image": "assets/hero-drop.jpg",
+      "image": "assets/img/front-night.jpg",
       "photo_url": "",
       "caption": "DROP 001 / CORE"
     },
     {
-      "image": "assets/city-cargo.jpg",
+      "image": "assets/img/city-cargo.jpg",
       "photo_url": "",
       "caption": "CITY / UTILITY"
-    },
-    {
-      "image": "assets/heavy-hoodie.jpg",
-      "photo_url": "",
-      "caption": "HEAVY / 400 GSM"
     }
   ],
   "media": {
@@ -243,6 +333,7 @@
     "teaser_story_url": "",
     "story_link": "",
     "teaser_story_file": "assets/video/teaser-story-h265.mp4",
-    "teaser_story_spec": "720x1280 H.265 keyint=1s, 30.8 s, 3.7 MB — under Bot API InputStoryContentVideo limits (<=30 MB, <=60 s)"
+    "teaser_story_spec": "720x1280 H.265 keyint=1s, 30.8 s, 3.7 MB — under Bot API InputStoryContentVideo limits (<=30 MB, <=60 s)",
+    "image_manifest": "assets/img/manifest.json"
   }
 }

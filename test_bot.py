@@ -316,13 +316,13 @@ class BotTests(unittest.TestCase):
             brand_bot = BrandBot(settings, api, make_db(directory), Catalog(catalog_path))
             brand_bot.db.upsert_user({"id": 5, "first_name": "N"})
             gallery = brand_bot.product_gallery(brand_bot.catalog.get("tee-sila-i-chest-001"))
-            self.assertEqual(len(gallery), 5)
-            self.assertTrue(all(url.startswith("https://shop.example.com/assets/sila-i-chest/") for url in gallery))
+            self.assertEqual(len(gallery), 7)
+            self.assertTrue(all(url.startswith("https://shop.example.com/assets/img/") for url in gallery))
             brand_bot.show_product(5, 5, "tee-sila-i-chest-001")
             methods = [method for method, _ in api.calls]
             self.assertEqual(methods, ["sendMediaGroup", "sendMessage"])
             album = api.calls[0][1]["media"]
-            self.assertEqual(len(album), 5)
+            self.assertEqual(len(album), 7)
             self.assertIn("ЗАБРАТЬ РАЗМЕР", str(api.calls[1][1]["reply_markup"]))
             # без WEBAPP_URL локальные ассеты недоступны Telegram — карточка уходит текстом, без падения
             offline = Settings(**{**settings.__dict__, "webapp_url": ""})
@@ -490,3 +490,150 @@ class TeaserTests(unittest.TestCase):
         self.assertEqual(api.calls[0][0], 100)
         self.assertIsInstance(api.calls[0][1], Path)
         self.assertEqual(api.calls[1][0], "send_message")
+
+
+class WebAppOrderTests(unittest.TestCase):
+    """POST /api/order: подпись initData, заявка с номером жетона, отказ без подписи."""
+
+    TOKEN = "123456:TEST-TOKEN"
+
+    @staticmethod
+    def sign(token, fields):
+        import hashlib
+        import hmac
+        import urllib.parse
+
+        check = "\n".join(f"{k}={v}" for k, v in sorted(fields.items()))
+        secret = hmac.new(b"WebAppData", token.encode(), hashlib.sha256).digest()
+        fields = dict(fields, hash=hmac.new(secret, check.encode(), hashlib.sha256).hexdigest())
+        return urllib.parse.urlencode(fields)
+
+    def init_data(self, token=None, age=0, user_id=77):
+        import time
+
+        return self.sign(token or self.TOKEN, {
+            "query_id": "AAE",
+            "user": json.dumps({"id": user_id, "first_name": "Никита", "username": "vv"}, ensure_ascii=False, separators=(",", ":")),
+            "auth_date": str(int(time.time()) - age),
+        })
+
+    def test_verify_init_data(self):
+        from bot import verify_init_data
+
+        good = verify_init_data(self.init_data(), self.TOKEN)
+        self.assertIsNotNone(good)
+        self.assertEqual(good["user"]["id"], 77)
+        self.assertIsNone(verify_init_data(self.init_data(token="999:OTHER"), self.TOKEN), "чужой токен")
+        self.assertIsNone(verify_init_data(self.init_data() + "x", self.TOKEN), "испорченная подпись")
+        self.assertIsNone(verify_init_data(self.init_data(age=48 * 3600), self.TOKEN), "просроченный auth_date")
+        self.assertIsNone(verify_init_data("", self.TOKEN))
+        self.assertIsNone(verify_init_data(self.init_data(), ""))
+
+    def make_bot(self, directory):
+        from bot import BrandBot, Catalog, Settings, TelegramAPI
+
+        root = Path(directory)
+        catalog_path = root / "catalog.json"
+        shutil.copy(Path(__file__).with_name("catalog.json"), catalog_path)
+        settings = Settings(
+            token=self.TOKEN, admin_ids=frozenset(), channel_url="https://t.me/channel",
+            webapp_url="https://shop.example.com", manager_chat_id=900, brand_name="ВОРОЖБИТОВ",
+            support_username="", database_path=root / "bot.sqlite3", catalog_path=catalog_path,
+            health_port=8080, giveaway_min_invites=3, privacy_url="",
+        )
+
+        class FakeAPI(TelegramAPI):
+            def __init__(self):
+                super().__init__("fake")
+                self.sent = []
+
+            def call(self, method, payload=None, timeout=70):
+                self.sent.append((method, payload))
+                return {"message_id": len(self.sent)}
+
+        api = FakeAPI()
+        return BrandBot(settings, api, make_db(directory), Catalog(catalog_path)), api, settings
+
+    def test_http_order_with_tag_number(self):
+        import http.client
+        from bot import start_health_server
+
+        with tempfile.TemporaryDirectory() as directory:
+            brand_bot, api, settings = self.make_bot(directory)
+            server = start_health_server(0, brand_bot.catalog, settings, brand_bot)
+            port = server.server_address[1]
+            try:
+                def post(body, headers):
+                    conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+                    conn.request("POST", "/api/order", body=json.dumps(body).encode(), headers={"Content-Type": "application/json", **headers})
+                    response = conn.getresponse()
+                    data = json.loads(response.read().decode())
+                    conn.close()
+                    return response.status, data
+
+                order = {
+                    "type": "order", "request_id": "web-1", "consent": True,
+                    "customer": {"name": "Тест", "phone": "+79990000000", "city": "Москва"},
+                    "items": [
+                        {"product_id": "tag-sila-i-chest-001", "size": "ONE SIZE", "quantity": 1, "note": "63"},
+                        {"product_id": "tee-sila-i-chest-001", "size": "L", "quantity": 1, "note": "<script>"},
+                    ],
+                }
+                # 1) без подписи — 401, ничего не создано
+                status, data = post({"order": order}, {})
+                self.assertEqual(status, 401)
+                self.assertFalse(data["ok"])
+                self.assertEqual(brand_bot.db.stats().get("orders", 0), 0)
+
+                # 2) с подписью — 200, два заказа, номер жетона в уведомлении менеджеру
+                status, data = post({"order": order}, {"X-Telegram-Init-Data": self.init_data()})
+                self.assertEqual(status, 200, data)
+                self.assertTrue(data["ok"])
+                self.assertEqual(len(data["orders"]), 2)
+                self.assertEqual(data["orders"][0]["code"], f"{data['orders'][0]['id']:05d}")
+                user = brand_bot.db.get_user(77)
+                self.assertEqual(user["phone"], "+79990000000")
+                self.assertTrue(brand_bot.db.has_consent(77))
+                texts = [payload.get("text", "") for method, payload in api.sent if method == "sendMessage"]
+                manager = [payload.get("text", "") for method, payload in api.sent if method == "sendMessage" and payload.get("chat_id") == 900]
+                self.assertTrue(manager and "НОМЕР ЖЕТОНА: 63" in manager[0], manager)
+                self.assertNotIn("<script>", "".join(texts), "невалидная заметка для футболки отброшена")
+                notes = brand_bot.db.connection().execute("SELECT payload FROM events WHERE event='order_note'").fetchall()
+                self.assertEqual(len(notes), 1)
+
+                # 3) повтор того же request_id — идемпотентно
+                status, data = post({"order": order}, {"X-Telegram-Init-Data": self.init_data()})
+                self.assertEqual(status, 200)
+                self.assertTrue(data.get("duplicate"))
+                self.assertEqual(brand_bot.db.stats().get("orders", 0), 2)
+
+                # 4) мусор — 400/413, сервер жив
+                conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+                conn.request("POST", "/api/order", body=b"{not json", headers={"Content-Type": "application/json", "X-Telegram-Init-Data": self.init_data()})
+                self.assertEqual(conn.getresponse().status, 400)
+                conn.close()
+                conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+                conn.request("GET", "/api/catalog")
+                catalog = json.loads(conn.getresponse().read().decode())
+                conn.close()
+                self.assertTrue(catalog["orders_endpoint"])
+                self.assertIn("tag-sila-i-chest-001", [p["id"] for p in catalog["products"]])
+            finally:
+                server.shutdown()
+                server.server_close()
+
+    def test_order_endpoint_disabled_without_token(self):
+        import http.client
+        from bot import start_health_server
+
+        server = start_health_server(0)  # как preview_server: без бота и токена
+        port = server.server_address[1]
+        try:
+            conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+            conn.request("POST", "/api/order", body=b"{}", headers={"Content-Type": "application/json"})
+            response = conn.getresponse()
+            self.assertEqual(response.status, 503)
+            conn.close()
+        finally:
+            server.shutdown()
+            server.server_close()
