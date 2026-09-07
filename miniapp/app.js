@@ -377,6 +377,97 @@
     }
     renderCategoryChips();
     renderProducts();
+    applyMedia();
+  }
+
+  function applyMedia() {
+    // URL видео приходят из catalog.json (/api/catalog) — ролик можно заменить без пересборки образа.
+    const media = state.data.media || {};
+    const swap = (video, src, poster) => {
+      if (!video || !src) return;
+      const source = video.querySelector("source");
+      if (source && source.getAttribute("src") !== src) { source.setAttribute("src", src); video.load(); }
+      if (poster) video.setAttribute("poster", poster);
+    };
+    swap(heroVideo, media.hero_video, media.hero_poster);
+    if (media.hero_poster) { const fb = $(".hero-fallback"); if (fb) fb.src = media.hero_poster; }
+    swap(teaserVideo, media.teaser, media.teaser_poster);
+    if (media.teaser_poster) { const img = $("#teaserCard img"); if (img) img.src = media.teaser_poster; }
+    if (heroVideo && heroVideo.paused) tryPlayHero();
+  }
+
+  // ------------------------------------------------------------------ video
+  // Hero-loop — тихий зацикленный ролик вместо hero-картинки. Правила:
+  //  • autoplay только muted+playsinline; iOS WKWebView всё равно может отказать —
+  //    тогда показываем постер и кнопку ▶ (никаких «мёртвых» автоплеев);
+  //  • saveData / reduced-motion → не грузим видео вообще;
+  //  • пауза, когда hero ушёл с экрана или приложение свернули (батарея).
+  const heroVideo = $("#heroVideo");
+  const heroVisual = $("#heroVisual");
+  const heroPlay = $("#heroPlay");
+  const teaserVideo = $("#teaserVideo");
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const lowData = Boolean(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "")));
+  const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let heroAllowed = !lowData && !reducedMotion;
+  let heroInView = true;
+
+  function tryPlayHero() {
+    if (!heroVideo || !heroAllowed || !heroInView || document.hidden) return;
+    const attempt = heroVideo.play();
+    if (attempt && typeof attempt.catch === "function") {
+      attempt.then(() => { heroPlay.classList.add("hidden"); }).catch(() => { heroPlay.classList.remove("hidden"); });
+    }
+  }
+
+  function setupHeroVideo() {
+    if (!heroVideo) return;
+    if (!heroAllowed) { heroVideo.removeAttribute("preload"); heroVideo.preload = "none"; heroPlay.classList.remove("hidden"); }
+    heroVideo.addEventListener("playing", () => { heroVisual.classList.add("video-ready"); heroPlay.classList.add("hidden"); });
+    heroVideo.addEventListener("error", () => { heroVisual.classList.remove("video-ready"); heroPlay.classList.add("hidden"); heroAllowed = false; });
+    heroPlay.addEventListener("click", () => { heroAllowed = true; heroVideo.preload = "auto"; tryPlayHero(); });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(entries => entries.forEach(entry => {
+        heroInView = entry.isIntersecting;
+        if (heroInView) tryPlayHero(); else if (!heroVideo.paused) heroVideo.pause();
+      }), { threshold: 0.2 }).observe(heroVisual);
+    }
+    document.addEventListener("visibilitychange", () => { if (document.hidden) { if (!heroVideo.paused) heroVideo.pause(); } else tryPlayHero(); });
+    tryPlayHero();
+  }
+
+  function openTeaser() {
+    if (!heroVideo.paused) heroVideo.pause();
+    openModal("teaserModal");
+    if (teaserVideo) {
+      teaserVideo.muted = false;
+      const attempt = teaserVideo.play();
+      if (attempt && typeof attempt.catch === "function") attempt.catch(() => { /* пользователь нажмёт ▶ в controls */ });
+    }
+    if (tg && tg.HapticFeedback && typeof tg.HapticFeedback.impactOccurred === "function") tg.HapticFeedback.impactOccurred("light");
+  }
+
+  function closeTeaser() {
+    if (teaserVideo) { teaserVideo.pause(); try { teaserVideo.currentTime = 0; } catch (_) { /* not loaded */ } }
+    tryPlayHero();
+  }
+
+  function shareTeaserToStory() {
+    // Bot API 7.8+: Telegram сам скачивает media_url, поэтому нужен абсолютный публичный HTTPS-URL.
+    const media = state.data.media || {};
+    const url = media.teaser_story_url || new URL("assets/video/teaser-720.mp4", window.location.href).href;
+    if (!tg || typeof tg.shareToStory !== "function") return showToast("Сторис доступны только внутри Telegram.");
+    const params = { text: "СИЛА И ЧЕСТЬ — DROP 001. Забрать размер — в боте." };
+    if (media.story_link) params.widget_link = { url: media.story_link, name: "ВОРОЖБИТОВ" };
+    try { tg.shareToStory(url, params); } catch (_) { showToast("Не удалось открыть редактор сторис."); }
+  }
+
+  function setupStoryButton() {
+    const button = $("#storyButton");
+    if (!button) return;
+    const supported = tg && typeof tg.shareToStory === "function" && typeof tg.isVersionAtLeast === "function" && tg.isVersionAtLeast("7.8");
+    button.classList.toggle("hidden", !supported);
+    button.addEventListener("click", shareTeaserToStory);
   }
 
   function bindEvents() {
@@ -460,9 +551,14 @@
 
     $$('[data-scroll]').forEach(button => button.addEventListener("click", () => scrollToId(button.dataset.scroll)));
     $$('[data-open="manifesto"]').forEach(button => button.addEventListener("click", () => scrollToId("manifesto")));
-    $$('[data-close]').forEach(button => button.addEventListener("click", () => closeModal(button.dataset.close)));
-    $$(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", event => { if (event.target === backdrop) closeModal(backdrop.id); }));
-    document.addEventListener("keydown", event => { if (event.key === "Escape") $$(".modal-backdrop:not(.hidden)").forEach(modal => closeModal(modal.id)); });
+    $$('[data-close]').forEach(button => button.addEventListener("click", () => { closeModal(button.dataset.close); if (button.dataset.close === "teaserModal") closeTeaser(); }));
+    const teaserCard = $("#teaserCard");
+    if (teaserCard) {
+      teaserCard.addEventListener("click", openTeaser);
+      teaserCard.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openTeaser(); } });
+    }
+    $$(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", event => { if (event.target === backdrop) { closeModal(backdrop.id); if (backdrop.id === "teaserModal") closeTeaser(); } }));
+    document.addEventListener("keydown", event => { if (event.key === "Escape") $$(".modal-backdrop:not(.hidden)").forEach(modal => { closeModal(modal.id); if (modal.id === "teaserModal") closeTeaser(); }); });
 
     const sections = ["home", "catalog", "lookbook", "join"];
     const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) $$(".bottom-link").forEach(link => link.classList.toggle("active", link.dataset.scroll === entry.target.id)); }), { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
@@ -472,6 +568,8 @@
   iconize();
   configureTelegram();
   bindEvents();
+  setupHeroVideo();
+  setupStoryButton();
   updateCounters();
   loadCatalog();
   window.VorozhbitovShop = { state, openProduct, openCart };

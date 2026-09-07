@@ -334,3 +334,82 @@ class BotTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StorefrontVideoTests(unittest.TestCase):
+    """Видео для Mini App должно отдаваться с поддержкой Range — иначе iOS не играет."""
+
+    @classmethod
+    def setUpClass(cls):
+        import http.client
+        from bot import StorefrontHandler, start_health_server
+
+        cls.tmp = tempfile.mkdtemp()
+        root = Path(cls.tmp)
+        (root / "assets" / "video").mkdir(parents=True)
+        cls.payload = bytes(range(256)) * 40  # 10 240 байт
+        (root / "assets" / "video" / "clip.mp4").write_bytes(cls.payload)
+        (root / "index.html").write_text("<!doctype html><title>t</title>", encoding="utf-8")
+        cls._orig_root = StorefrontHandler.static_root
+        StorefrontHandler.static_root = root
+        cls.server = start_health_server(0)
+        cls.port = cls.server.server_address[1]
+        cls.http = http.client
+
+    @classmethod
+    def tearDownClass(cls):
+        from bot import StorefrontHandler
+
+        cls.server.shutdown()
+        cls.server.server_close()
+        StorefrontHandler.static_root = cls._orig_root
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def request(self, method, path, headers=None):
+        conn = self.http.HTTPConnection("127.0.0.1", self.port, timeout=5)
+        conn.request(method, path, headers=headers or {})
+        response = conn.getresponse()
+        body = response.read()
+        conn.close()
+        return response, body
+
+    def test_full_video_response_advertises_ranges(self):
+        response, body = self.request("GET", "/assets/video/clip.mp4")
+        self.assertEqual(response.status, 200)
+        self.assertEqual(response.getheader("Accept-Ranges"), "bytes")
+        self.assertEqual(response.getheader("Content-Type"), "video/mp4")
+        self.assertIn("max-age=86400", response.getheader("Cache-Control"))
+        self.assertEqual(body, self.payload)
+
+    def test_safari_probe_range_gets_206(self):
+        response, body = self.request("GET", "/assets/video/clip.mp4", {"Range": "bytes=0-1"})
+        self.assertEqual(response.status, 206)
+        self.assertEqual(response.getheader("Content-Range"), f"bytes 0-1/{len(self.payload)}")
+        self.assertEqual(body, self.payload[:2])
+
+    def test_open_ended_and_suffix_ranges(self):
+        response, body = self.request("GET", "/assets/video/clip.mp4", {"Range": "bytes=10000-"})
+        self.assertEqual(response.status, 206)
+        self.assertEqual(body, self.payload[10000:])
+        response, body = self.request("GET", "/assets/video/clip.mp4", {"Range": "bytes=-100"})
+        self.assertEqual(response.status, 206)
+        self.assertEqual(body, self.payload[-100:])
+        self.assertEqual(response.getheader("Content-Range"), f"bytes {len(self.payload) - 100}-{len(self.payload) - 1}/{len(self.payload)}")
+
+    def test_unsatisfiable_range_is_416(self):
+        response, body = self.request("GET", "/assets/video/clip.mp4", {"Range": "bytes=999999-"})
+        self.assertEqual(response.status, 416)
+        self.assertEqual(response.getheader("Content-Range"), f"bytes */{len(self.payload)}")
+
+    def test_head_has_headers_and_no_body(self):
+        response, body = self.request("HEAD", "/assets/video/clip.mp4")
+        self.assertEqual(response.status, 200)
+        self.assertEqual(response.getheader("Content-Length"), str(len(self.payload)))
+        self.assertEqual(body, b"")
+        response, body = self.request("HEAD", "/index.html")
+        self.assertEqual(response.status, 200)
+        self.assertEqual(body, b"")
+
+    def test_path_traversal_is_still_blocked(self):
+        response, _ = self.request("GET", "/assets/video/../../bot.py")
+        self.assertEqual(response.status, 404)

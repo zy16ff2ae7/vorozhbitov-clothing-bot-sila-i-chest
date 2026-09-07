@@ -1870,6 +1870,11 @@ class BrandBot:
             return False
 
 
+VIDEO_SUFFIXES = {".mp4", ".m4v", ".webm", ".mov"}
+VIDEO_CHUNK = 256 * 1024
+RANGE_RE = re.compile(r"^bytes=(\d*)-(\d*)$")
+
+
 class StorefrontHandler(BaseHTTPRequestHandler):
     """Serve the Telegram Mini App and a read-only catalog endpoint.
 
@@ -1890,7 +1895,8 @@ class StorefrontHandler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", cache_control)
         self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
-        self.wfile.write(body)
+        if self.command != "HEAD":
+            self.wfile.write(body)
 
     def _not_found(self) -> None:
         self._write(b"Not found", "text/plain; charset=utf-8", 404, "no-store")
@@ -1912,6 +1918,7 @@ class StorefrontHandler(BaseHTTPRequestHandler):
                 "products": [product for product in catalog.data.get("products", []) if product.get("active", True)],
                 "categories": catalog.categories,
                 "lookbook": catalog.data.get("lookbook", []),
+                "media": catalog.data.get("media", {}),
             }
             self._write(json.dumps(payload, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
             return
@@ -1930,16 +1937,81 @@ class StorefrontHandler(BaseHTTPRequestHandler):
         if not candidate.is_file():
             self._not_found()
             return
+        content_type = mimetypes.guess_type(candidate.name)[0] or "application/octet-stream"
+        if content_type.startswith("text/") or content_type in {"application/javascript", "image/svg+xml"}:
+            content_type += "; charset=utf-8"
+        suffix = candidate.suffix.lower()
+        if suffix in VIDEO_SUFFIXES:
+            self._send_file_ranged(candidate, content_type, "public, max-age=86400")
+            return
         try:
             body = candidate.read_bytes()
         except OSError:
             self._not_found()
             return
-        content_type = mimetypes.guess_type(candidate.name)[0] or "application/octet-stream"
-        if content_type.startswith("text/") or content_type in {"application/javascript", "image/svg+xml"}:
-            content_type += "; charset=utf-8"
-        cache = "public, max-age=3600" if candidate.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp", ".svg"} else "no-cache"
+        cache = "public, max-age=3600" if suffix in {".jpg", ".jpeg", ".png", ".webp", ".svg"} else "no-cache"
         self._write(body, content_type, 200, cache)
+
+    def _send_file_ranged(self, path: Path, content_type: str, cache_control: str) -> None:
+        """Отдаёт файл с поддержкой HTTP Range (206) и потоково, не читая его целиком.
+
+        Без этого <video> в iOS/Safari WKWebView не стартует и не перематывается:
+        первый запрос идёт как ``Range: bytes=0-1``, и сервер обязан ответить 206.
+        """
+        try:
+            size = path.stat().st_size
+        except OSError:
+            self._not_found()
+            return
+        start, end = 0, size - 1
+        status = 200
+        range_header = self.headers.get("Range", "")
+        match = RANGE_RE.match(range_header.strip()) if range_header else None
+        if match:
+            raw_start, raw_end = match.group(1), match.group(2)
+            if raw_start == "" and raw_end == "":
+                match = None
+            elif raw_start == "":  # suffix range: last N bytes
+                length = min(int(raw_end), size)
+                start, end = size - length, size - 1
+            else:
+                start = int(raw_start)
+                end = min(int(raw_end), size - 1) if raw_end else size - 1
+            if match and (start > end or start >= size):
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{size}")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
+            if match:
+                status = 206
+        length = end - start + 1
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(length))
+        self.send_header("Accept-Ranges", "bytes")
+        self.send_header("Cache-Control", cache_control)
+        self.send_header("X-Content-Type-Options", "nosniff")
+        if status == 206:
+            self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+        self.end_headers()
+        if self.command == "HEAD":
+            return
+        try:
+            with path.open("rb") as handle:
+                handle.seek(start)
+                remaining = length
+                while remaining > 0:
+                    chunk = handle.read(min(VIDEO_CHUNK, remaining))
+                    if not chunk:
+                        break
+                    self.wfile.write(chunk)
+                    remaining -= len(chunk)
+        except (BrokenPipeError, ConnectionResetError, OSError):
+            return
+
+    def do_HEAD(self) -> None:
+        self.do_GET()
 
     def log_message(self, format: str, *args: Any) -> None:
         return

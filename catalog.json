@@ -233,5 +233,13 @@
       "photo_url": "",
       "caption": "HEAVY / 400 GSM"
     }
-  ]
+  ],
+  "media": {
+    "hero_video": "assets/video/hero-loop.mp4",
+    "hero_poster": "assets/video/hero-poster.jpg",
+    "teaser": "assets/video/teaser-720.mp4",
+    "teaser_poster": "assets/video/teaser-poster.jpg",
+    "teaser_story_url": "",
+    "story_link": ""
+  }
 }

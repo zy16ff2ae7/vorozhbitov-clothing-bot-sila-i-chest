@@ -43,11 +43,13 @@
             <div><strong>RU</strong><span>MADE FOR CITY</span></div>
           </div>
         </div>
-        <div class="hero-visual image-frame">
-          <img src="assets/sila-i-chest/front-night.jpg" alt="Футболка СИЛА И ЧЕСТЬ, ночная улица" fetchpriority="high">
-          <div class="image-index">01 <span>/</span> 03</div>
-          <div class="image-stamp">NO<br>REPEAT</div>
-          <div class="corner-label">СИЛА И ЧЕСТЬ<br><span>TEE—001</span></div>
+        <div class="hero-visual image-frame" id="heroVisual">
+          <video class="hero-video" id="heroVideo" muted loop playsinline preload="metadata" poster="assets/video/hero-poster.jpg" aria-label="СИЛА И ЧЕСТЬ — тизер дропа">
+            <source src="assets/video/hero-loop.mp4" type="video/mp4">
+          </video>
+          <img class="hero-fallback" src="assets/video/hero-poster.jpg" alt="Никита Ворожбитов в футболке СИЛА И ЧЕСТЬ на фоне Геликов" fetchpriority="high">
+          <button class="hero-play hidden" id="heroPlay" type="button" aria-label="Запустить видео"><span>▶</span></button>
+          <div class="corner-label">DROP 001<br><span>СИЛА И ЧЕСТЬ</span></div>
         </div>
       </section>
 
@@ -89,7 +91,7 @@
       <section class="feature-section section-pad" id="lookbook">
         <div class="section-heading compact"><div><span class="section-kicker">03 / ВИЗУАЛЬНЫЙ ЖУРНАЛ</span><h2>В ПОЛЕ.</h2></div><span class="item-count">FIELD NOTES / 001</span></div>
         <div class="lookbook-grid">
-          <figure class="lookbook-card lookbook-main"><img src="assets/city-cargo.jpg" alt="Карго на индустриальном полу"><figcaption><span>FIELD NOTE 01</span><strong>CITY / UTILITY</strong></figcaption></figure>
+          <figure class="lookbook-card lookbook-main lookbook-video" id="teaserCard" role="button" tabindex="0" aria-label="Смотреть тизер дропа"><img src="assets/video/teaser-poster.jpg" alt="Тизер СИЛА И ЧЕСТЬ"><span class="play-badge" aria-hidden="true">▶</span><figcaption><span>FIELD NOTE 01 · 0:31</span><strong>СИЛА И ЧЕСТЬ / ТИЗЕР</strong></figcaption></figure>
           <figure class="lookbook-card"><img src="assets/heavy-hoodie.jpg" alt="Черный худи крупным планом"><figcaption><span>FIELD NOTE 02</span><strong>HEAVY / 400 GSM</strong></figcaption></figure>
           <div class="lookbook-note"><span class="red-slash">//</span><p>Снято без декораций. Так выглядит вещь, когда её уже носят.</p><button class="button button-outline" data-scroll="catalog" type="button">В ВИТРИНУ <span>↗</span></button></div>
         </div>
@@ -136,6 +138,18 @@
     <div class="cart-sheet"><div class="sheet-header"><div><span class="section-kicker">ЗАЯВКА / 001</span><h2>ТВОИ ВЕЩИ.</h2></div><button class="sheet-close" data-close="cartModal" type="button" aria-label="Закрыть">×</button></div><div class="cart-content" id="cartContent"></div><div class="cart-checkout hidden" id="checkoutForm"><div class="form-rule"></div><div class="checkout-total"><span>ИТОГО</span><strong id="cartTotal">0 ₽</strong></div><label class="field-label">ИМЯ<input id="checkoutName" type="text" placeholder="Как к тебе обращаться?"></label><label class="field-label">ТЕЛЕФОН<input id="checkoutPhone" type="tel" placeholder="+7 900 000-00-00" inputmode="tel"></label><label class="field-label">ГОРОД / ДОСТАВКА<input id="checkoutCity" type="text" placeholder="Город и удобный способ доставки"></label><label class="consent-check"><input id="checkoutConsent" type="checkbox"><span>Соглашаюсь на обработку данных для связи по заявке.</span></label><button class="button button-primary full-button" id="submitOrder" type="button">ОТПРАВИТЬ ЗАЯВКУ <span>↗</span></button><p class="form-note">Оплата не списывается сейчас. Менеджер сначала подтвердит наличие.</p></div></div>
   </div>
 
+  <div class="modal-backdrop hidden" id="teaserModal" role="dialog" aria-modal="true" aria-label="Тизер дропа">
+    <div class="teaser-sheet">
+      <button class="sheet-close" data-close="teaserModal" type="button" aria-label="Закрыть">×</button>
+      <video class="teaser-video" id="teaserVideo" controls playsinline preload="none" poster="assets/video/teaser-poster.jpg">
+        <source src="assets/video/teaser-720.mp4" type="video/mp4">
+      </video>
+      <div class="teaser-actions">
+        <button class="button button-primary" data-scroll="catalog" data-close="teaserModal" type="button">В ВИТРИНУ <span>↗</span></button>
+        <button class="button button-ghost hidden" id="storyButton" type="button">В СТОРИС <span>↗</span></button>
+      </div>
+    </div>
+  </div>
   <div class="modal-backdrop hidden" id="sizeGuideModal" role="dialog" aria-modal="true" aria-label="Таблица размеров"><div class="info-sheet"><div class="sheet-header"><div><span class="section-kicker">ПОДСКАЗКА / 001</span><h2>РАЗМЕРЫ.</h2></div><button class="sheet-close" data-close="sizeGuideModal" type="button" aria-label="Закрыть">×</button></div><p class="info-lead">Посадка у вещей свободная. Если сомневаешься между двумя — бери больший для более объемного силуэта.</p><div class="size-table"><div><span>РАЗМЕР</span><span>ГРУДЬ</span><span>ДЛИНА</span></div><div><b>S</b><span>112 см</span><span>70 см</span></div><div><b>M</b><span>118 см</span><span>72 см</span></div><div><b>L</b><span>124 см</span><span>74 см</span></div><div><b>XL</b><span>130 см</span><span>76 см</span></div></div><p class="form-note">Замеры ориентировочные. Точную консультацию даст менеджер.</p></div></div>
   </div>
 
