@@ -3,3 +3,10 @@ __pycache__/
 *.pyc
 data/
 .DS_Store
+
+# Материалы воркспейса, восстановленные из архива v9-workspace-full
+# (исходники съёмки, скрины, загрузки — не часть кода)
+/photos/
+/uploads/
+/image-search/
+/sila-i-chest/
