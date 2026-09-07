@@ -343,6 +343,11 @@ class Database:
             CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at);
             CREATE INDEX IF NOT EXISTS idx_events_event ON events(event);
             CREATE INDEX IF NOT EXISTS idx_users_interest ON users(interest);
+            CREATE TABLE IF NOT EXISTS kv (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
             """
         )
         order_columns = {row[1] for row in conn.execute("PRAGMA table_info(orders)")}
@@ -358,6 +363,17 @@ class Database:
             conn.execute("ALTER TABLE users ADD COLUMN invited_count INTEGER NOT NULL DEFAULT 0")
         if "consent_at" not in user_columns:
             conn.execute("ALTER TABLE users ADD COLUMN consent_at TEXT")
+
+    def get_kv(self, key: str) -> str | None:
+        row = self.connection().execute("SELECT value FROM kv WHERE key = ?", (key,)).fetchone()
+        return str(row["value"]) if row else None
+
+    def set_kv(self, key: str, value: str) -> None:
+        self.connection().execute(
+            "INSERT INTO kv(key, value, updated_at) VALUES (?, ?, ?) "
+            "ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at",
+            (key, value, utc_now()),
+        )
 
     def upsert_user(self, telegram_user: dict[str, Any], source: str | None = None) -> tuple[bool, int | None]:
         """Create or refresh a user. Returns (is_new, referrer_id).
@@ -741,6 +757,74 @@ class TelegramAPI:
             media.append(item)
         return self.call("sendMediaGroup", {"chat_id": chat_id, "media": media})
 
+    def send_video(
+        self,
+        chat_id: int,
+        video: str | Path,
+        caption: str = "",
+        reply_markup: dict[str, Any] | None = None,
+        *,
+        width: int = 0,
+        height: int = 0,
+        duration: int = 0,
+        thumbnail: Path | None = None,
+    ) -> Any:
+        """sendVideo: строка — file_id или HTTPS-URL (JSON), Path — загрузка файла multipart/form-data.
+
+        Возвращает Message; вызывающий должен закешировать result["video"]["file_id"], чтобы не
+        загружать ролик заново каждому пользователю (лимит бота на загрузку — 50 МБ).
+        """
+        fields: dict[str, str] = {"chat_id": str(chat_id), "supports_streaming": "true", "parse_mode": "HTML"}
+        if caption:
+            fields["caption"] = caption
+        if reply_markup:
+            fields["reply_markup"] = json.dumps(reply_markup)
+        for name, value in (("width", width), ("height", height), ("duration", duration)):
+            if value:
+                fields[name] = str(value)
+        if isinstance(video, str):
+            payload: dict[str, Any] = {**fields, "video": video, "supports_streaming": True}
+            if reply_markup:
+                payload["reply_markup"] = reply_markup
+            return self.call("sendVideo", payload)
+        files: list[tuple[str, str, str, bytes]] = [("video", video.name, "video/mp4", video.read_bytes())]
+        if thumbnail and thumbnail.is_file():
+            fields["thumbnail"] = "attach://thumb"
+            files.append(("thumb", thumbnail.name, "image/jpeg", thumbnail.read_bytes()))
+        return self._multipart("sendVideo", fields, files, timeout=180)
+
+    def _multipart(self, method: str, fields: dict[str, str], files: list[tuple[str, str, str, bytes]], timeout: int = 60) -> Any:
+        boundary = "----VorozhbitovBoundary9f3c2a1b"
+        chunks: list[bytes] = []
+        for name, value in fields.items():
+            chunks.extend([f"--{boundary}\r\n".encode(), f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode(), value.encode("utf-8"), b"\r\n"])
+        for name, filename, content_type, content in files:
+            chunks.extend(
+                [
+                    f"--{boundary}\r\n".encode(),
+                    f'Content-Disposition: form-data; name="{name}"; filename="{filename}"\r\n'.encode(),
+                    f"Content-Type: {content_type}\r\n\r\n".encode(),
+                    content,
+                    b"\r\n",
+                ]
+            )
+        chunks.append(f"--{boundary}--\r\n".encode())
+        request = urllib.request.Request(
+            self.base_url + method,
+            data=b"".join(chunks),
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                result = json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            details = exc.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"Telegram HTTP {exc.code}: {details}") from exc
+        if not result.get("ok"):
+            raise RuntimeError(f"Telegram API error: {result}")
+        return result.get("result")
+
     def answer_callback(self, callback_id: str, text: str = "") -> None:
         self.call("answerCallbackQuery", {"callback_query_id": callback_id, "text": text})
 
@@ -897,6 +981,48 @@ class BrandBot:
 
     # ------------------------------------------------------------------ flows
 
+    # ------------------------------------------------------------------ teaser
+    TEASER_KEY = "teaser_file_id"
+
+    def teaser_source(self) -> tuple[str | Path | None, dict[str, Any]]:
+        """Откуда брать тизер: кешированный file_id → публичный URL из catalog.media → локальный файл."""
+        media = self.catalog.data.get("media", {}) or {}
+        meta = {"width": 720, "height": 1280, "duration": 31}
+        cached = (self.db.get_kv(self.TEASER_KEY) or "").strip()
+        if cached:
+            return cached, meta
+        public = str(media.get("teaser_story_url") or "").strip()
+        if public.startswith("https://"):
+            return public, meta
+        local = BASE_DIR / "miniapp" / str(media.get("teaser") or "assets/video/teaser-720.mp4")
+        if local.is_file() and local.stat().st_size <= 50 * 1024 * 1024:
+            return local, meta
+        return None, meta
+
+    def send_teaser(self, chat_id: int, user_id: int, caption: str = "", reply_markup: dict[str, Any] | None = None) -> bool:
+        """Отправляет тизер дропа. Первый раз грузит файл, дальше шлёт file_id. Ошибки не роняют диалог."""
+        source, meta = self.teaser_source()
+        if source is None:
+            return False
+        media = self.catalog.data.get("media", {}) or {}
+        poster = BASE_DIR / "miniapp" / str(media.get("teaser_poster") or "assets/video/teaser-poster.jpg")
+        try:
+            result = self.api.send_video(
+                chat_id, source, caption, reply_markup,
+                width=meta["width"], height=meta["height"], duration=meta["duration"],
+                thumbnail=poster if isinstance(source, Path) else None,
+            )
+        except Exception:
+            LOG.exception("Failed to send teaser to %s", chat_id)
+            if isinstance(source, str) and source == self.db.get_kv(self.TEASER_KEY):
+                self.db.set_kv(self.TEASER_KEY, "")  # протухший file_id — в следующий раз загрузим заново
+            return False
+        file_id = str(((result or {}).get("video") or {}).get("file_id") or "")
+        if file_id and file_id != self.db.get_kv(self.TEASER_KEY):
+            self.db.set_kv(self.TEASER_KEY, file_id)
+        self.db.event(user_id, "teaser_sent", {"via": "file_id" if isinstance(source, str) else "upload"})
+        return True
+
     def start(self, chat_id: int, user: dict[str, Any], payload: str = "") -> None:
         source = payload[:64] if payload else None
         is_new, referrer = self.db.upsert_user(user, source)
@@ -914,6 +1040,7 @@ class BrandBot:
         name = esc(user.get("first_name") or "друг")
 
         if is_new:
+            self.send_teaser(chat_id, user_id, f"<b>СИЛА И ЧЕСТЬ</b> — DROP 001. Тираж один, повторов не будет.")
             text = (
                 f"{FIRE} <b>{esc(self.settings.brand_name)}</b>\n\n"
                 f"{name}, ты попал в закрытую территорию бренда.\n"
@@ -988,6 +1115,8 @@ class BrandBot:
             ]
         )
         gallery = self.product_gallery(product)
+        if product.get("teaser") and self.send_teaser(chat_id, user_id, caption, keyboard):
+            return
         if len(gallery) > 1:
             # Альбом (перед / спина / раскладка), затем текст с кнопками:
             # sendMediaGroup не умеет inline-клавиатуру.

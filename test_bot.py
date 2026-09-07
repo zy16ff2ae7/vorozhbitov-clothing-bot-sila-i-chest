@@ -413,3 +413,80 @@ class StorefrontVideoTests(unittest.TestCase):
     def test_path_traversal_is_still_blocked(self):
         response, _ = self.request("GET", "/assets/video/../../bot.py")
         self.assertEqual(response.status, 404)
+
+
+class TeaserTests(unittest.TestCase):
+    """Тизер: первый раз — загрузка файла, дальше — кешированный file_id; сбой не роняет диалог."""
+
+    class FakeAPI:
+        def __init__(self, fail_first=False):
+            self.calls = []
+            self.fail_first = fail_first
+
+        def send_video(self, chat_id, video, caption="", reply_markup=None, **kwargs):
+            self.calls.append((chat_id, video, caption, kwargs))
+            if self.fail_first and len(self.calls) == 1:
+                raise RuntimeError("Telegram API error: Bad Request: wrong file identifier")
+            return {"message_id": len(self.calls), "video": {"file_id": "FILE_ID_123"}}
+
+        def send_message(self, *args, **kwargs):
+            self.calls.append(("send_message", args))
+
+        def send_photo(self, *args, **kwargs):
+            self.calls.append(("send_photo", args))
+
+        def send_media_group(self, *args, **kwargs):
+            self.calls.append(("send_media_group", args))
+
+    def make_bot(self, api):
+        directory = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, directory, True)
+        db = make_db(directory)
+        catalog = Catalog(Path(__file__).with_name("catalog.json"))
+        settings = Settings(
+            token="", admin_ids=frozenset(), channel_url="https://t.me/x", webapp_url="", manager_chat_id=None,
+            brand_name="ВОРОЖБИТОВ", support_username="", database_path=Path(directory) / "t.sqlite3",
+            catalog_path=Path(__file__).with_name("catalog.json"), health_port=0, giveaway_min_invites=3, privacy_url="",
+        )
+        return BrandBot(settings, api, db, catalog), db
+
+    def test_teaser_uploads_once_then_uses_file_id(self):
+        api = self.FakeAPI()
+        bot, db = self.make_bot(api)
+        db.upsert_user({"id": 1, "first_name": "A"})
+        self.assertTrue(bot.send_teaser(100, 1, "cap"))
+        self.assertIsInstance(api.calls[0][1], Path, "first send must upload the local file")
+        self.assertTrue(str(api.calls[0][1]).endswith("teaser-720.mp4"))
+        self.assertEqual(api.calls[0][3]["width"], 720)
+        self.assertEqual(db.get_kv(BrandBot.TEASER_KEY), "FILE_ID_123")
+        self.assertTrue(bot.send_teaser(101, 1, "cap"))
+        self.assertEqual(api.calls[1][1], "FILE_ID_123", "second send must reuse cached file_id")
+
+    def test_stale_file_id_is_dropped_and_failure_is_soft(self):
+        api = self.FakeAPI(fail_first=True)
+        bot, db = self.make_bot(api)
+        db.upsert_user({"id": 2, "first_name": "B"})
+        db.set_kv(BrandBot.TEASER_KEY, "STALE")
+        self.assertFalse(bot.send_teaser(100, 2))
+        self.assertEqual(db.get_kv(BrandBot.TEASER_KEY), "")
+        self.assertTrue(bot.send_teaser(100, 2))
+        self.assertIsInstance(api.calls[1][1], Path)
+
+    def test_product_card_with_teaser_flag_sends_video_with_keyboard(self):
+        api = self.FakeAPI()
+        bot, db = self.make_bot(api)
+        db.upsert_user({"id": 3, "first_name": "C"})
+        bot.show_product(100, 3, "tee-sila-i-chest-001")
+        video_calls = [c for c in api.calls if c[0] == 100]
+        self.assertEqual(len(video_calls), 1)
+        _, _, caption, kwargs = video_calls[0]
+        self.assertIn("СИЛА И ЧЕСТЬ", caption)
+        self.assertNotIn(("send_media_group",), [c[:1] for c in api.calls])
+
+    def test_start_for_new_user_sends_teaser_first(self):
+        api = self.FakeAPI()
+        bot, db = self.make_bot(api)
+        bot.start(100, {"id": 4, "first_name": "D"})
+        self.assertEqual(api.calls[0][0], 100)
+        self.assertIsInstance(api.calls[0][1], Path)
+        self.assertEqual(api.calls[1][0], "send_message")

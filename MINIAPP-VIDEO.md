@@ -29,6 +29,16 @@
 `Content-Range`, 416 на невалидный диапазон), `Cache-Control: public, max-age=86400`, и корректно отвечает на `HEAD`.
 Без этого `<video>` в iOS/Safari не стартует (первый запрос — `Range: bytes=0-1`). Тесты: `StorefrontVideoTests` в `test_bot.py`.
 
+## Бот (`bot.py`)
+- `TelegramAPI.send_video()` — `sendVideo`: строка = `file_id`/HTTPS-URL (JSON), `Path` = загрузка файла multipart
+  (с `thumbnail=attach://thumb`, `width/height/duration`, `supports_streaming`).
+- `BrandBot.send_teaser()` — источник по приоритету: кешированный `file_id` (таблица `kv`) → `media.teaser_story_url` →
+  локальный `miniapp/assets/video/teaser-720.mp4` (≤50 МБ). После первой удачной отправки `file_id` сохраняется —
+  дальше Telegram отдаёт ролик из своего кеша, файл не гоняется. Протухший `file_id` сбрасывается, ошибка не роняет диалог.
+- Где используется: `/start` для **новых** пользователей (тизер перед приветствием) и карточка товара с флагом
+  `"teaser": true` в `catalog.json` (сейчас — только футболка): вместо альбома уходит видео с подписью и inline-кнопками.
+- Тесты: `TeaserTests` (4).
+
 ## Сторис
 `tg.shareToStory(media_url)` требует **абсолютный публичный HTTPS-URL** — Telegram скачивает файл сам. Заполнить
 `catalog.json → media.teaser_story_url` (можно CDN/объектное хранилище) и `media.story_link` (ссылка на бота; виджет-ссылка

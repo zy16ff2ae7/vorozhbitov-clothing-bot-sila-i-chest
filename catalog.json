@@ -59,7 +59,8 @@
         "Усиленная горловина"
       ],
       "stock_label": "Первый тираж",
-      "active": true
+      "active": true,
+      "teaser": true
     },
     {
       "id": "drop-tee-001",
