@@ -293,5 +293,44 @@ class BotTests(unittest.TestCase):
                 Catalog(path)
 
 
+    def test_product_with_images_is_sent_as_album(self):
+        class FakeAPI(TelegramAPI):
+            def __init__(self):
+                self.calls = []
+
+            def call(self, method, payload=None, timeout=70):
+                self.calls.append((method, payload or {}))
+                return [{"message_id": 1}] if method == "sendMediaGroup" else {"message_id": len(self.calls)}
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            catalog_path = root / "catalog.json"
+            shutil.copy(Path(__file__).with_name("catalog.json"), catalog_path)
+            settings = Settings(
+                token="fake", admin_ids=frozenset(), channel_url="https://t.me/channel",
+                webapp_url="https://shop.example.com", manager_chat_id=None, brand_name="ВОРОЖБИТОВ",
+                support_username="", database_path=root / "bot.sqlite3", catalog_path=catalog_path,
+                health_port=8080, giveaway_min_invites=3, privacy_url="",
+            )
+            api = FakeAPI()
+            brand_bot = BrandBot(settings, api, make_db(directory), Catalog(catalog_path))
+            brand_bot.db.upsert_user({"id": 5, "first_name": "N"})
+            gallery = brand_bot.product_gallery(brand_bot.catalog.get("tee-sila-i-chest-001"))
+            self.assertEqual(len(gallery), 5)
+            self.assertTrue(all(url.startswith("https://shop.example.com/assets/sila-i-chest/") for url in gallery))
+            brand_bot.show_product(5, 5, "tee-sila-i-chest-001")
+            methods = [method for method, _ in api.calls]
+            self.assertEqual(methods, ["sendMediaGroup", "sendMessage"])
+            album = api.calls[0][1]["media"]
+            self.assertEqual(len(album), 5)
+            self.assertIn("ЗАБРАТЬ РАЗМЕР", str(api.calls[1][1]["reply_markup"]))
+            # без WEBAPP_URL локальные ассеты недоступны Telegram — карточка уходит текстом, без падения
+            offline = Settings(**{**settings.__dict__, "webapp_url": ""})
+            api2 = FakeAPI()
+            bot2 = BrandBot(offline, api2, brand_bot.db, brand_bot.catalog)
+            bot2.show_product(5, 5, "tee-sila-i-chest-001")
+            self.assertEqual([m for m, _ in api2.calls], ["sendMessage"])
+
+
 if __name__ == "__main__":
     unittest.main()

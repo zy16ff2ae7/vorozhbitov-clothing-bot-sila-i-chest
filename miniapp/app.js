@@ -12,6 +12,7 @@
       { id: "access", name: "Аксессуары" }
     ],
     products: [
+      { id: "tee-sila-i-chest-001", category: "drop", name: "СИЛА И ЧЕСТЬ / TEE", price: "4 900 ₽", sizes: ["S", "M", "L", "XL", "XXL"], description: "Чёрная футболка с уставной надписью «СИЛА И ЧЕСТЬ» на груди и мечом по позвоночнику. Первый тираж — один раз и без повторов.", image: "assets/sila-i-chest/front-night.jpg", images: ["assets/sila-i-chest/front-night.jpg", "assets/sila-i-chest/back-boxing.jpg", "assets/sila-i-chest/flatlay.jpg", "assets/sila-i-chest/crew.jpg", "assets/sila-i-chest/gym.jpg"], badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Прямой крой", details: ["Принт спереди: «СИЛА И ЧЕСТЬ», уставной шрифт", "Принт сзади: меч по позвоночнику, монограмма ВВ у ворота", "Плотная шелкография, не трескается", "Усиленная горловина"], stock_label: "Первый тираж", active: true },
       { id: "drop-tee-001", category: "drop", name: "CORE TEE / 001", price: "4 900 ₽", sizes: ["S", "M", "L", "XL"], description: "Плотный хлопок, свободный крой, минимальный сигнал на груди. Первый тираж — один раз и без повторов.", image: "assets/base-tee.jpg", badge: "DROP 001", material: "100% хлопок · 240 г/м²", fit: "Свободный крой", details: ["Плотный хлопок", "Усиленная горловина", "Бирка-сигнал внутри"], stock_label: "Осталось мало", active: true },
       { id: "drop-hoodie-001", category: "drop", name: "CORE HOODIE / 001", price: "9 900 ₽", sizes: ["M", "L", "XL"], description: "Тяжёлое полотно, объёмный силуэт, двойная строчка. Увидел — забирай: партия ограничена.", image: "assets/hero-drop.jpg", badge: "LIMITED", material: "100% хлопок · 400 г/м²", fit: "Объемный крой", details: ["Футер 3-нитка", "Капюшон с двойной строчкой", "Металлические наконечники"], stock_label: "Последний тираж", active: true },
       { id: "hoodie-heavy-002", category: "hoodie", name: "HEAVY HOODIE / 002", price: "10 500 ₽", sizes: ["S", "M", "L", "XL"], description: "400 г/м². Держит форму и темп города. Никакой лишней графики — только посадка и вес.", image: "assets/heavy-hoodie.jpg", badge: "CORE", material: "100% хлопок · 400 г/м²", fit: "Свободный крой", details: ["Мягкий начес", "Плотные манжеты", "Карман-кенгуру"], stock_label: "В наличии", active: true },
@@ -41,6 +42,7 @@
     saved: loadJSON("vorozhbitov_saved", []),
     currentProduct: null,
     selectedSize: null,
+    galleryIndex: 0,
     toastTimer: null,
     loadedFromApi: false
   };
@@ -70,6 +72,30 @@
 
   function imageFor(product) {
     return String(product.image || product.image_url || "assets/base-tee.jpg");
+  }
+
+  function galleryFor(product) {
+    const list = Array.isArray(product.images) && product.images.length ? product.images : [imageFor(product)];
+    return list.map(String).filter((src, index, all) => src && all.indexOf(src) === index);
+  }
+
+  const GALLERY_LABELS = ["ПЕРЕД", "СПИНА", "ТОВАР", "LOOK 01", "LOOK 02", "LOOK 03", "LOOK 04", "LOOK 05", "LOOK 06", "LOOK 07"];
+
+  function showGallerySlide(index) {
+    const product = state.currentProduct;
+    if (!product) return;
+    const slides = galleryFor(product);
+    state.galleryIndex = (index + slides.length) % slides.length;
+    const img = $("#sheetImage");
+    img.classList.add("swapping");
+    setTimeout(() => { img.src = slides[state.galleryIndex]; img.classList.remove("swapping"); }, 120);
+    $("#galleryDots").innerHTML = slides.map((_, i) => `<span class="${i === state.galleryIndex ? "active" : ""}"></span>`).join("");
+    const multi = slides.length > 1;
+    $("#galleryPrev").classList.toggle("hidden", !multi);
+    $("#galleryNext").classList.toggle("hidden", !multi);
+    let label = $(".gallery-label", $(".sheet-image"));
+    if (!label) { label = document.createElement("span"); label.className = "gallery-label"; $(".sheet-image").appendChild(label); }
+    label.textContent = multi ? (GALLERY_LABELS[state.galleryIndex] || `${state.galleryIndex + 1} / ${slides.length}`) : "";
   }
 
   function productById(id) {
@@ -156,8 +182,10 @@
   function renderSheet(product) {
     state.currentProduct = product;
     state.selectedSize = null;
-    $("#sheetImage").src = imageFor(product);
     $("#sheetImage").alt = product.name;
+    state.galleryIndex = 0;
+    $("#sheetImage").src = galleryFor(product)[0];
+    showGallerySlide(0);
     $("#sheetBadge").textContent = product.badge || "CORE";
     $("#sheetKicker").textContent = `${categoryName(product.category).toUpperCase()} / ${product.fit || "CORE"}`;
     $("#sheetTitle").textContent = product.name;
@@ -377,6 +405,21 @@
     });
 
     $("#sheetSave").addEventListener("click", () => { if (state.currentProduct) toggleSaved(state.currentProduct.id); });
+    $("#galleryPrev").addEventListener("click", event => { event.stopPropagation(); showGallerySlide(state.galleryIndex - 1); });
+    $("#galleryNext").addEventListener("click", event => { event.stopPropagation(); showGallerySlide(state.galleryIndex + 1); });
+    $("#sheetImage").addEventListener("click", () => { if (galleryFor(state.currentProduct || {}).length > 1) showGallerySlide(state.galleryIndex + 1); });
+    let touchX = null;
+    $(".sheet-image").addEventListener("touchstart", event => { touchX = event.touches[0].clientX; }, { passive: true });
+    $(".sheet-image").addEventListener("touchend", event => {
+      if (touchX === null) return;
+      const dx = event.changedTouches[0].clientX - touchX; touchX = null;
+      if (Math.abs(dx) > 40) showGallerySlide(state.galleryIndex + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+    document.addEventListener("keydown", event => {
+      if ($("#productModal").classList.contains("hidden")) return;
+      if (event.key === "ArrowRight") showGallerySlide(state.galleryIndex + 1);
+      if (event.key === "ArrowLeft") showGallerySlide(state.galleryIndex - 1);
+    });
     $("#addToCartButton").addEventListener("click", addToCart);
     $("#cartButton").addEventListener("click", openCart);
     $("#bottomCartButton").addEventListener("click", openCart);

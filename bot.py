@@ -987,11 +987,37 @@ class BrandBot:
                 [("Назад", f"cat:{product['category']}")],
             ]
         )
-        photo = self.public_asset_url(product.get("photo_url") or product.get("image"))
+        gallery = self.product_gallery(product)
+        if len(gallery) > 1:
+            # Альбом (перед / спина / раскладка), затем текст с кнопками:
+            # sendMediaGroup не умеет inline-клавиатуру.
+            try:
+                self.api.send_media_group(chat_id, gallery)
+            except Exception:
+                LOG.exception("Failed to send product album %s", product_id)
+                self.api.send_photo(chat_id, gallery[0], caption, keyboard)
+                return
+            self.api.send_message(chat_id, caption, keyboard)
+            return
+        photo = gallery[0] if gallery else ""
         if photo:
             self.api.send_photo(chat_id, photo, caption, keyboard)
         else:
             self.api.send_message(chat_id, caption, keyboard)
+
+    def product_gallery(self, product: dict[str, Any]) -> list[str]:
+        """Публичные URL фото товара: photo_url, затем images[], затем image. Без дублей, максимум 10."""
+        seen: list[str] = []
+        candidates: list[Any] = [product.get("photo_url")]
+        images = product.get("images")
+        if isinstance(images, list):
+            candidates.extend(images)
+        candidates.append(product.get("image"))
+        for candidate in candidates:
+            url = self.public_asset_url(candidate)
+            if url and url not in seen:
+                seen.append(url)
+        return seen[:10]
 
     def choose_size(self, chat_id: int, user_id: int, product_id: str) -> None:
         product = self.catalog.get(product_id)

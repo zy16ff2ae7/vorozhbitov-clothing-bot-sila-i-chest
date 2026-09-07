@@ -5,26 +5,84 @@
     "drop": "DROP 001"
   },
   "categories": [
-    { "id": "drop", "name": "Дроп 001" },
-    { "id": "hoodie", "name": "Худи" },
-    { "id": "tee", "name": "Футболки" },
-    { "id": "bottom", "name": "Низ" },
-    { "id": "access", "name": "Аксессуары" }
+    {
+      "id": "drop",
+      "name": "Дроп 001"
+    },
+    {
+      "id": "hoodie",
+      "name": "Худи"
+    },
+    {
+      "id": "tee",
+      "name": "Футболки"
+    },
+    {
+      "id": "bottom",
+      "name": "Низ"
+    },
+    {
+      "id": "access",
+      "name": "Аксессуары"
+    }
   ],
   "products": [
+    {
+      "id": "tee-sila-i-chest-001",
+      "category": "drop",
+      "name": "СИЛА И ЧЕСТЬ / TEE",
+      "price": "4 900 ₽",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "description": "Чёрная футболка с уставной надписью «СИЛА И ЧЕСТЬ» на груди и мечом по позвоночнику. Первый тираж — один раз и без повторов.",
+      "photo_url": "",
+      "image": "assets/sila-i-chest/front-night.jpg",
+      "images": [
+        "assets/sila-i-chest/front-night.jpg",
+        "assets/sila-i-chest/back-boxing.jpg",
+        "assets/sila-i-chest/flatlay.jpg",
+        "assets/sila-i-chest/crew.jpg",
+        "assets/sila-i-chest/gym.jpg"
+      ],
+      "badge": "DROP 001",
+      "material": "100% хлопок · 240 г/м²",
+      "fit": "Прямой крой",
+      "details": [
+        "Принт спереди: «СИЛА И ЧЕСТЬ», уставной шрифт",
+        "Принт сзади: меч по позвоночнику, монограмма ВВ у ворота",
+        "Плотная шелкография, не трескается",
+        "Усиленная горловина"
+      ],
+      "stock_label": "Первый тираж",
+      "active": true
+    },
     {
       "id": "drop-tee-001",
       "category": "drop",
       "name": "CORE TEE / 001",
       "price": "4 900 ₽",
-      "sizes": ["S", "M", "L", "XL"],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
       "description": "Плотный хлопок, свободный крой, минимальный сигнал на груди. Первый тираж — один раз и без повторов.",
       "photo_url": "",
       "image": "assets/base-tee.jpg",
       "badge": "DROP 001",
       "material": "100% хлопок · 240 г/м²",
       "fit": "Свободный крой",
-      "details": ["Плотный хлопок", "Усиленная горловина", "Бирка-сигнал внутри"],
+      "details": [
+        "Плотный хлопок",
+        "Усиленная горловина",
+        "Бирка-сигнал внутри"
+      ],
       "stock_label": "Осталось мало",
       "active": true
     },
@@ -33,14 +91,22 @@
       "category": "drop",
       "name": "CORE HOODIE / 001",
       "price": "9 900 ₽",
-      "sizes": ["M", "L", "XL"],
+      "sizes": [
+        "M",
+        "L",
+        "XL"
+      ],
       "description": "Тяжёлое полотно, объёмный силуэт, двойная строчка. Увидел — забирай: партия ограничена.",
       "photo_url": "",
       "image": "assets/hero-drop.jpg",
       "badge": "LIMITED",
       "material": "100% хлопок · 400 г/м²",
       "fit": "Объемный крой",
-      "details": ["Футер 3-нитка", "Капюшон с двойной строчкой", "Металлические наконечники"],
+      "details": [
+        "Футер 3-нитка",
+        "Капюшон с двойной строчкой",
+        "Металлические наконечники"
+      ],
       "stock_label": "Последний тираж",
       "active": true
     },
@@ -49,14 +115,23 @@
       "category": "hoodie",
       "name": "HEAVY HOODIE / 002",
       "price": "10 500 ₽",
-      "sizes": ["S", "M", "L", "XL"],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
       "description": "400 г/м². Держит форму и темп города. Никакой лишней графики — только посадка и вес.",
       "photo_url": "",
       "image": "assets/heavy-hoodie.jpg",
       "badge": "CORE",
       "material": "100% хлопок · 400 г/м²",
       "fit": "Свободный крой",
-      "details": ["Мягкий начес", "Плотные манжеты", "Карман-кенгуру"],
+      "details": [
+        "Мягкий начес",
+        "Плотные манжеты",
+        "Карман-кенгуру"
+      ],
       "stock_label": "В наличии",
       "active": true
     },
@@ -65,14 +140,23 @@
       "category": "tee",
       "name": "EVERYDAY TEE / 002",
       "price": "3 900 ₽",
-      "sizes": ["S", "M", "L", "XL"],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
       "description": "База на каждый день: плотная ткань, спокойная форма, вещь, которую не хочется снимать.",
       "photo_url": "",
       "image": "assets/base-tee.jpg",
       "badge": "EVERYDAY",
       "material": "100% хлопок · 240 г/м²",
       "fit": "Boxy fit",
-      "details": ["Гладкая фактура", "Плотная горловина", "Стирается без сюрпризов"],
+      "details": [
+        "Гладкая фактура",
+        "Плотная горловина",
+        "Стирается без сюрпризов"
+      ],
       "stock_label": "В наличии",
       "active": true
     },
@@ -81,14 +165,22 @@
       "category": "bottom",
       "name": "CITY CARGO / 001",
       "price": "8 500 ₽",
-      "sizes": ["S", "M", "L"],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
       "description": "Свободные карго с регулируемой посадкой и усиленными карманами. Город не бережёт — эти выдержат.",
       "photo_url": "",
       "image": "assets/city-cargo.jpg",
       "badge": "UTILITY",
       "material": "Плотный хлопок · ripstop",
       "fit": "Relaxed fit",
-      "details": ["6 функциональных карманов", "Регулировка низа", "Усиленные швы"],
+      "details": [
+        "6 функциональных карманов",
+        "Регулировка низа",
+        "Усиленные швы"
+      ],
       "stock_label": "Мало размеров",
       "active": true
     },
@@ -97,21 +189,49 @@
       "category": "access",
       "name": "SIGNAL CAP / 001",
       "price": "3 200 ₽",
-      "sizes": ["ONE SIZE"],
+      "sizes": [
+        "ONE SIZE"
+      ],
       "description": "Плотная шестиклинка с маленькой красной меткой. Никаких громких логотипов — свой считывает.",
       "photo_url": "",
       "image": "assets/logo-cap.jpg",
       "badge": "SIGNAL",
       "material": "100% хлопок",
       "fit": "Регулируемый размер",
-      "details": ["Металлическая застежка", "Вышитая метка", "Внутренняя лента"],
+      "details": [
+        "Металлическая застежка",
+        "Вышитая метка",
+        "Внутренняя лента"
+      ],
       "stock_label": "В наличии",
       "active": true
     }
   ],
   "lookbook": [
-    { "image": "assets/hero-drop.jpg", "photo_url": "", "caption": "DROP 001 / CORE" },
-    { "image": "assets/city-cargo.jpg", "photo_url": "", "caption": "CITY / UTILITY" },
-    { "image": "assets/heavy-hoodie.jpg", "photo_url": "", "caption": "HEAVY / 400 GSM" }
+    {
+      "image": "assets/sila-i-chest/crew.jpg",
+      "photo_url": "",
+      "caption": "СИЛА И ЧЕСТЬ / СВОИ"
+    },
+    {
+      "image": "assets/sila-i-chest/roof.jpg",
+      "photo_url": "",
+      "caption": "СИЛА И ЧЕСТЬ / ГОРОД"
+    },
+    {
+      "image": "assets/hero-drop.jpg",
+      "photo_url": "",
+      "caption": "DROP 001 / CORE"
+    },
+    {
+      "image": "assets/city-cargo.jpg",
+      "photo_url": "",
+      "caption": "CITY / UTILITY"
+    },
+    {
+      "image": "assets/heavy-hoodie.jpg",
+      "photo_url": "",
+      "caption": "HEAVY / 400 GSM"
+    }
   ]
 }

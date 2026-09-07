@@ -368,3 +368,16 @@ img { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   *, *:before, *:after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* --- галерея карточки товара --- */
+.sheet-image { position: relative; }
+.sheet-image > img { transition: opacity .22s ease; }
+.sheet-image > img.swapping { opacity: 0; }
+.gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 56px; border: 1px solid var(--line); background: rgba(11,11,13,.62); color: var(--fg, #f2f2f0); font-size: 30px; line-height: 1; cursor: pointer; backdrop-filter: blur(4px); }
+.gallery-arrow.prev { left: 10px; }
+.gallery-arrow.next { right: 10px; }
+.gallery-arrow:active { background: var(--red); border-color: var(--red); }
+.gallery-dots { position: absolute; left: 0; right: 0; bottom: 12px; display: flex; justify-content: center; gap: 6px; pointer-events: none; }
+.gallery-dots span { width: 22px; height: 3px; background: rgba(242,240,235,.32); transition: background .2s; }
+.gallery-dots span.active { background: var(--red); }
+.gallery-label { position: absolute; left: 14px; bottom: 26px; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(242,240,235,.78); pointer-events: none; }
