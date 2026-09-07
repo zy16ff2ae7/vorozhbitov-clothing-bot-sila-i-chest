@@ -1,0 +1,12 @@
+.git
+.gitignore
+data/
+*.sqlite3*
+__pycache__/
+*.pyc
+.env
+.env.*
+test_bot.py
+smoke_test.py
+preview_server.py
+*.md
